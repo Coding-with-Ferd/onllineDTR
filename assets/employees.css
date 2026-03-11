@@ -1,0 +1,92 @@
+/* Table Container styling */
+.employee-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #edf2f7; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.employee-table th {
+    background-color: #f8fafc;
+    color: #4a5568;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 20px;
+    border-bottom: 2px solid #edf2f7;
+    text-align: left;
+}
+
+.employee-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #edf2f7;
+    color: #2d3748;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.employee-table tr:last-child td {
+    border-bottom: none;
+}
+
+.employee-table tr:hover {
+    background-color: #f7fafc; 
+}
+
+.add-btn {
+    background: #1f851d; 
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(26, 109, 24, 0.15);
+}
+
+.add-btn:hover {
+    background: #155a13;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(26, 109, 24, 0.2);
+}
+
+/* Table Action Buttons */
+.table-action a {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.table-action a.edit {
+    background-color: #ebf8ff;
+    color: #3182ce;
+}
+
+.table-action a.edit:hover {
+    background-color: #bee3f8;
+    color: #2b6cb0;
+}
+
+.table-action a.delete {
+    background-color: #fff5f5;
+    color: #e53e3e;
+}
+
+.table-action a.delete:hover {
+    background-color: #fed7d7;
+    color: #c53030;
+}

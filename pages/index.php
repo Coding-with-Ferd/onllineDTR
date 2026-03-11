@@ -1,5 +1,12 @@
 <?php
-session_start();
+require_once '../config/session.php';
+require_once '../auth/db_connect.php';
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,49 +73,7 @@ session_start();
 </div>
 </div>
 
-<script>
-
-fetch('../backend/attendance_trends.php')
-.then(res => res.json())
-.then(data => {
-
-document.getElementById("totalEmployees").innerText = data.totalEmployees
-document.getElementById("presentToday").innerText = data.presentToday
-document.getElementById("absentToday").innerText = data.absentToday
-
-const ctx = document.getElementById('attendanceChart')
-
-new Chart(ctx, {
-type: 'line',
-data: {
-labels: data.labels,
-datasets: [{
-label: 'Present Employees',
-data: data.present,
-borderWidth: 2,
-fill: false
-}]
-},
-options: {
-responsive: true,
-maintainAspectRatio: false,
-scales: {
-y: {
-beginAtZero: true,
-ticks: {
-stepSize: 1,
-precision: 0
-}
-}
-}
-}
-})
-
-})
-
-
-</script>
-
 <script src="../assets/js/sidebar.js"></script>
+<script src="../assets/js/chart.js"></script>
 </body>
 </html>

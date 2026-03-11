@@ -1,139 +1,266 @@
 <?php
-session_start();
-include '../auth/db_connect.php';
-
-// Get date from GET or use today
-$date = $_GET['date'] ?? date('Y-m-d');
-
-// Fetch all employees
-$query = $conn->query("SELECT * FROM employees ORDER BY last_name ASC");
-$employees = $query->fetch_all(MYSQLI_ASSOC);
-
-// Fetch existing daily status for the selected date
-$status_records = [];
-$status_query = $conn->prepare("SELECT * FROM daily_status WHERE status_date = ?");
-$status_query->bind_param("s", $date);
-$status_query->execute();
-$res = $status_query->get_result();
-while($row = $res->fetch_assoc()){
-    $status_records[$row['employee_id']] = $row['status'];
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
-
-// Status options
-$status_options = ['Regular working day', 'Absent', 'Half day', 'Special non-working holiday', 'Holiday', 'Leave'];
+// include '../backend/branch_logic.php'; 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Status - PrimeHealth</title>
+    <title>Branch Status - Naked Beauty Aesthetics</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="../assets/sidebar.css">
     <link rel="stylesheet" href="../assets/header.css">
-
     <style>
-        .status-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .main-layer {
+            padding: 30px;
+            background-color: var(--bg-light);
         }
 
-        .status-table th, .status-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
+        .branch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
         }
 
-        .status-table th {
-            background-color: #1a6d18;
-            color: #fff;
+        .branch-card {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .status-table tr:hover {
-            background-color: rgba(0,0,0,0.05);
+        .branch-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
         }
 
-        select.status-select {
-            padding: 5px 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+        .branch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
         }
 
-        .save-btn {
-            background-color: #1a6d18;
-            color: #fff;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 6px;
+        .branch-info h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .branch-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 5px 0 0 0;
+        }
+
+        /* Status Pill */
+        .status-indicator {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Metrics Row */
+        .branch-metrics {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        .metric-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* Toggle Switch */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .switch-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        /* Pro Toggle Button */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
             cursor: pointer;
-            margin-top: 15px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 24px;
         }
 
-        .save-btn:hover {
-            opacity: 0.9;
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
 
-        .date-picker {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            margin-bottom: 15px;
+        input:checked+.slider {
+            background-color: #1a7318;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
         }
     </style>
 </head>
+
 <body>
-<div class="dashboard">
+    <div class="dashboard">
+        <?php include '../components/sidebar.php'; ?>
+        <div class="main">
+            <?php include '../components/header.php'; ?>
 
-    <!-- Sidebar -->
-    <?php include '../components/sidebar.php'; ?>
+            <div class="main-layer">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 2rem; font-weight: 800; color: #1e293b; margin:0;">
+                        <i class="bi bi-geo-alt-fill" style="color: #1a7318;"></i> Branch Status
+                    </h1>
+                    <p style="color: #64748b; margin-top: 5px;">Live monitoring of clinic operations and availability.</p>
+                </div>
 
-    <div class="main">
+                <div class="branch-grid">
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <div class="branch-info">
+                                <h3>Camarin Branch</h3>
+                                <p><i class="bi bi-clock"></i> 9:00 AM - 6:00 PM</p>
+                            </div>
+                            <span class="status-indicator status-open">Open</span>
+                        </div>
 
-        <!-- Header -->
-        <?php include '../components/header.php'; ?>
+                        <div class="branch-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">08</span>
+                                <span class="metric-label">Staff On-Duty</span>
+                            </div>
+                            <div class="metric-item" style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                                <span class="metric-value">14</span>
+                                <span class="metric-label">Appts Today</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">02</span>
+                                <span class="metric-label">Waiting</span>
+                            </div>
+                        </div>
 
-        <div class="main-layer">
-            <div class="content">
-                <h1>Daily Status / Exception</h1>
+                        <div class="switch-container">
+                            <span class="switch-label">Operation Status</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
-                <form action="../backend/daily_status.php" method="POST">
-                    <label for="status_date">Select Date:</label>
-                    <input type="date" id="status_date" name="status_date" class="date-picker" value="<?= $date ?>">
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <div class="branch-info">
+                                <h3>Brixton Branch</h3>
+                                <p><i class="bi bi-clock"></i> 9:00 AM - 6:00 PM</p>
+                            </div>
+                            <span class="status-indicator status-closed">Closed</span>
+                        </div>
 
-                    <table class="status-table">
-                        <thead>
-                        <tr>
-                            <th>Employee</th>
-                            <th>Position</th>
-                            <th>Daily Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach($employees as $emp): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?></td>
-                                <td><?= htmlspecialchars($emp['position']) ?></td>
-                                <td>
-                                    <select name="status[<?= $emp['id'] ?>]" class="status-select">
-                                        <?php foreach($status_options as $option): ?>
-                                            <option value="<?= $option ?>" <?= (isset($status_records[$emp['id']]) && $status_records[$emp['id']] == $option) ? 'selected' : '' ?>><?= $option ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                        <div class="branch-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">0</span>
+                                <span class="metric-label">Staff On-Duty</span>
+                            </div>
+                            <div class="metric-item" style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                                <span class="metric-value">0</span>
+                                <span class="metric-label">Appts Today</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">0</span>
+                                <span class="metric-label">Waiting</span>
+                            </div>
+                        </div>
 
-                    <button type="submit" class="save-btn"><i class="bi bi-save"></i> Save Status</button>
-                </form>
+                        <div class="switch-container">
+                            <span class="switch-label" style="color: #ef4444;">Closed for Maintenance</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
-</div>
+    <script src="../assets/js/sidebar.js"></script>
 </body>
+
 </html>

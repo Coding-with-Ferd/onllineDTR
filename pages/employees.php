@@ -17,83 +17,15 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- CSS -->
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="../assets/sidebar.css">
     <link rel="stylesheet" href="../assets/header.css">
     <link rel="stylesheet" href="../assets/addemployee.css">
+    <link rel="stylesheet" href="../assets/employees.css">
 
-    <style>
-        /* Table styling */
-        .employee-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
-
-        .employee-table th,
-        .employee-table td {
-            padding: 12px 15px;
-            border: 1px solid #1a8e4a;
-            text-align: left;
-        }
-
-        .employee-table th {
-            background: linear-gradient(135deg, #0b7a3b 0%, #1a8e4a 50%, #0b7a3b 100%);
-            color: #fff;
-        }
-
-        .employee-table tr:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .add-btn {
-            background: linear-gradient(135deg, #0b7a3b 0%, #1a8e4a 50%, #0b7a3b 100%);
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .add-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* Edit and Delete buttons in table */
-        .table-action a {
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-right: 5px;
-        }
-
-        .table-action a.edit {
-            background-color: #d0e7ff;
-            color: #0b7a3b;
-        }
-
-        .table-action a.edit:hover {
-            background-color: #a8d0ff;
-        }
-
-        .table-action a.delete {
-            background-color: #ffd0d0;
-            color: #b30000;
-        }
-
-        .table-action a.delete:hover {
-            background-color: #ffaaaa;
-        }
-    </style>
 </head>
 
 <body>
@@ -178,6 +110,10 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                                 <input type="text" name="last_name" required>
                             </div>
                             <div class="form-group">
+                                <label>Hire Date</label>
+                                <input type="text" id="modernDatePicker" placeholder="Select Date..">
+                            </div>
+                            <div class="form-group">
                                 <label>Position</label>
                                 <input type="text" name="position" required>
                             </div>
@@ -195,10 +131,6 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                             <div class="form-group">
                                 <label>Phone</label>
                                 <input type="text" name="phone">
-                            </div>
-                            <div class="form-group">
-                                <label>Hire Date</label>
-                                <input type="date" name="hire_date" required>
                             </div>
                             <div class="form-group">
                                 <label>Status</label>
@@ -221,6 +153,7 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
     </div>
     <script src="../assets/js/sidebar.js"></script>
     <script src="../assets/js/modal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 
 </html>

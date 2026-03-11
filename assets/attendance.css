@@ -1,0 +1,220 @@
+/* Container Background */
+.main-layer {
+    background-color: #f8fafc;
+    padding: 30px;
+}
+
+/* Header Alignment Fix */
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.header-info h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.header-info p {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+/* Filter Card */
+.filter-card {
+    display: flex;
+    gap: 15px;
+    background: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.input-group input {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Buttons */
+.btn-view {
+    background: #1a7318;
+    margin-top: 5px;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+    height: 38px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-excel {
+    background: #1d6f42;
+    margin-bottom: 14px;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 18px;
+    height: 48px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.btn-print-dark {
+    background: #333;
+    color: white;
+    border: none;
+    margin-bottom: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Modern Table Container */
+.table-container {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th {
+    background: #f8fafc;
+    padding: 18px 15px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.attendance-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* Employee Row Styling */
+.emp-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.name-initial {
+    width: 32px;
+    height: 32px;
+    background: #e8f5e9;
+    color: #1a7318;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+.absent-initial {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.position-tag {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.hours-col {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.muted-text {
+    color: #cbd5e1;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.status-present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-absent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-halfday {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Print Mode Optimization */
+@media print {
+
+    .header-actions,
+    .sidebar,
+    .header {
+        display: none !important;
+    }
+
+    .main-layer {
+        padding: 0;
+    }
+
+    .table-container {
+        border: 1px solid #000;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .attendance-table th,
+    .attendance-table td {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+    }
+}

@@ -1,25 +1,28 @@
-// Sidebar toggle
 document.addEventListener("DOMContentLoaded", function () {
-
     const sidebar = document.querySelector('#sidebar');
     const toggleBtn = document.querySelector('#toggleBtn');
 
-    // Load saved state
+    // 1. Sidebar Toggle Logic
     if (localStorage.getItem('sidebarState') === 'collapsed') {
         sidebar.classList.add('collapsed');
     }
 
-    // Toggle sidebar
     toggleBtn.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
-
-        if (sidebar.classList.contains('collapsed')) {
-            localStorage.setItem('sidebarState', 'collapsed');
-        } else {
-            localStorage.setItem('sidebarState', 'expanded');
-        }
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
     });
 
+    // 2. Active Link Logic
+    const sidebarLinks = document.querySelectorAll('.sidebar nav a');
+    const currentPage = window.location.pathname.split("/").pop();
+
+    sidebarLinks.forEach(link => {
+        const linkHref = link.getAttribute('href').split("/").pop();
+        if (linkHref === currentPage) {
+            link.classList.add('active');
+        }
+    });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -37,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
 
 // Live date & time
 function updateDateTime() {

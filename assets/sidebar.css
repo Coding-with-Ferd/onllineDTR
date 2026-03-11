@@ -13,7 +13,6 @@
     width: 70px;
 }
 
-/* Top circle icon */
 .sidebar .top-icon {
     width: 50px;
     height: 50px;
@@ -28,7 +27,20 @@
     cursor: pointer;
 }
 
-/* Navigation links */
+.sidebar .top-icon i {
+    margin-top: 8px;
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 5px;
+    pointer-events: none;
+}
+
+.sidebar a[href="../pages/profile.php"] {
+    position: relative;
+    z-index: 9999 !important;
+    cursor: pointer !important;
+}
+
 .sidebar nav {
     display: flex;
     flex-direction: column;
@@ -55,12 +67,11 @@
     font-size: 18px;
 }
 
-/* Collapsed sidebar */
 .sidebar.collapsed nav a span {
     display: none;
 }
 
-.toggle-btn{
+.toggle-btn {
     position: absolute;
     top: 50%;
     right: -15px;
@@ -71,13 +82,67 @@
     cursor: pointer;
 }
 
-/* Active sidebar link */
 .sidebar nav a.active {
     background-color: rgba(255, 255, 255, 0.2);
     color: #fff;
     border-left: 4px solid #fff;
 }
 
-.sidebar.collapsed nav a.active span{
-    display:none;
+.sidebar.collapsed nav a.active span {
+    display: none;
+}
+
+.user-info {
+    text-align: center;
+    padding: 15px 0;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info .top-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.user-info .user-name {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.user-info .greeting {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.toggle-btn {
+    text-align: center;
+    margin: 10px 0;
+    cursor: pointer;
+    color: white;
+}
+
+nav a span {
+    margin-left: 8px;
+}
+
+/* Hide the name when collapsed */
+.sidebar.collapsed .user-name {
+    display: none;
+    /* Or use opacity and visibility if you want a fade effect: */
+    /* opacity: 0; 
+       visibility: hidden; 
+       transition: opacity 0.3s ease; */
+}
+
+.sidebar.collapsed .user-info {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar.collapsed #toggleBtn i {
+    transform: rotate(180deg);
 }
