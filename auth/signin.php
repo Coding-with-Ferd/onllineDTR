@@ -10,6 +10,17 @@
 
 <body>
     <div class="login-scene">
+        <div class="top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 50 1440 320">
+            <defs>
+                <linearGradient id="wave-gradient-top" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="10%" style="stop-color:#000000; stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#35f15c; stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path fill="url(#wave-gradient-top)" fill-opacity="1" d="M0,192L60,165.3C120,139,240,85,360,90.7C480,96,600,160,720,197.3C840,235,960,245,1080,224C1200,203,1320,149,1380,122.7L1440,96L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+        </svg>
+        </div>
         <div class="left-panel">
             <div class="image-collage"></div>
             <div class="clinic-text">

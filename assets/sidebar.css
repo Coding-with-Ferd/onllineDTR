@@ -1,7 +1,7 @@
 /* Sidebar */
 .sidebar {
     width: 200px;
-    background: linear-gradient(135deg, #0b7a3b 0%, #1a8e4a 50%, #0b7a3b 100%);
+    background: linear-gradient(135deg, #226214 30%, #43cc25 100%);
     color: #fff;
     transition: width 0.3s;
     height: 100%;

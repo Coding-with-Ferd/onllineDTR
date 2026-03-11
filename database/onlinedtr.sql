@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2026 at 07:09 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Mar 11, 2026 at 10:16 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,8 +44,11 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`id`, `employee_id`, `attendance_date`, `time_in`, `time_out`, `status`, `total_hours`, `created_at`, `updated_at`) VALUES
-(3, 4, '2026-03-08', '12:29:00', NULL, 'Present', 0.00, '2026-03-09 00:29:54', '2026-03-09 00:29:54'),
-(4, 4, '2026-03-09', '00:38:02', '00:39:01', 'Present', 0.00, '2026-03-09 00:38:02', '2026-03-09 00:39:01');
+(3, 4, '2026-03-08', '12:29:00', NULL, 'Present', '0.00', '2026-03-09 00:29:54', '2026-03-09 00:29:54'),
+(4, 4, '2026-03-09', '00:38:02', '00:39:01', 'Present', '0.00', '2026-03-09 00:38:02', '2026-03-09 00:39:01'),
+(5, 5, '2026-03-11', '12:18:24', '12:18:47', 'Present', '0.00', '2026-03-11 12:18:24', '2026-03-11 12:18:47'),
+(6, 4, '2026-03-11', '13:28:16', '13:29:27', 'Present', '0.00', '2026-03-11 13:28:16', '2026-03-11 13:29:27'),
+(7, 6, '2026-03-11', '13:33:32', '13:34:21', 'Present', '0.00', '2026-03-11 13:33:32', '2026-03-11 13:34:21');
 
 -- --------------------------------------------------------
 
@@ -89,7 +92,9 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `last_name`, `middle_name`, `position`, `position_type`, `email`, `phone`, `hire_date`, `status`, `created_at`, `updated_at`) VALUES
-(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', '09636444567', '2026-01-13', 'active', '2026-03-08 15:09:28', '2026-03-08 15:09:28');
+(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', '09636444567', '2026-01-13', 'active', '2026-03-08 15:09:28', '2026-03-08 15:09:28'),
+(5, '26020902', 'EUGENE', 'PERILLANO', 'SAPASAP', 'ADMIN STAFF', 'Employee', 'ujinpalmarillano@gmail.com', '09854846093', '2026-02-09', 'active', '2026-03-11 04:18:07', '2026-03-11 04:18:07'),
+(6, '25120403', 'Kristine', 'Caabay', 'Collarga', 'IT Staff', 'Intern', 'kristinejoycaabay5@gmail.com', '09639932454', '2025-12-04', 'active', '2026-03-11 05:33:27', '2026-03-11 05:33:27');
 
 -- --------------------------------------------------------
 
@@ -112,7 +117,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`UserID`, `FullName`, `Email`, `PasswordHash`, `Status`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 'Ferdinand Tanilon', 'jokerferd@gmail.com', '$2y$10$v2M4AfTy5.w6jpo8NAxa/u0Sj.dc0r0w9UDgGSjaEcX2nHF9nEsj2', 'Active', '2026-03-07 10:31:35', '2026-03-07 10:31:35');
+(1, 'Ferdinand Tanilon', 'jokerferd@gmail.com', '$2y$10$v2M4AfTy5.w6jpo8NAxa/u0Sj.dc0r0w9UDgGSjaEcX2nHF9nEsj2', 'Active', '2026-03-07 10:31:35', '2026-03-07 10:31:35'),
+(2, 'eugene perillano', 'ujinpalmarillano@gmail.com', '$2y$10$yDjY28NbQzBZ/LQ90Ul/oes6.ulVGe9AdqOoj9MU/1vcED0n2wRDW', 'Active', '2026-03-11 04:13:27', '2026-03-11 04:13:27');
 
 --
 -- Indexes for dumped tables
@@ -153,7 +159,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `daily_status`
@@ -165,13 +171,13 @@ ALTER TABLE `daily_status`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

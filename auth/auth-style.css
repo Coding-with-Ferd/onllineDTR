@@ -1,28 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Montserrat:wght@300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@800&display=swap');
 
-/* Targets the input when an existing email is selected/autofilled */
 .input-group input:-webkit-autofill,
 .input-group input:-webkit-autofill:hover, 
 .input-group input:-webkit-autofill:focus,
 .input-group input:-webkit-autofill:active {
-    /* This creates an internal shadow that masks the white background */
+
     -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-    
-    /* This keeps your text color dark instead of the browser default */
+
     -webkit-text-fill-color: #333 !important;
-    
-    /* This makes the transition to the "white" background take 5000 seconds 
-       (effectively making it never happen) */
     transition: background-color 5000s ease-in-out 0s;
-    
     background-clip: content-box !important;
 }
 
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(180deg, #83da6d 0%, #a5e694 50%, #CBF7C2 100%);
+    background: white;
     overflow: hidden;
 }
 
@@ -33,28 +27,37 @@ body {
     width: 100%;
 }
 
-/* LEFT PANEL - Branding */
+.login-scene .top svg {
+    margin-bottom: 500px;
+    position: absolute;
+}
+
+.login-scene .bottom svg {
+    margin-top: 500px;
+    position: absolute;
+}
+
+/* LEFT PANEL */
 .left-panel {
-    flex: 1; /* Takes up 50% of the space */
+    flex: 1; 
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* Removed absolute positioning to allow flex to work */
 }
 
-/* RIGHT PANEL - Form Area */
+/* RIGHT PANEL */
 .login-panel {
-    flex: 1; /* Takes up the other 50% */
+    flex: 1; 
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertical center */
-    align-items: center;     /* Horizontal center */
+    justify-content: center; 
+    align-items: center;     
     position: relative;
 }
 
-/* LOGO - Starts center, slides to center of left half */
+/* LOGO  */
 .image-collage {
     position: absolute;
     top: 35%; 
@@ -67,21 +70,21 @@ body {
     animation-delay: 0.5s;
 }
 
-/* CLINIC TEXT - Slides with the logo */
+/* CLINIC TEXT */
 .clinic-text {
     position: absolute;
     top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: #478b55;
+    color: #226142;
     animation: textToLeft 1.6s ease forwards;
     animation-delay: 0.5s;
 }
 
 .clinic-text h1 {
     font-family: 'Bodoni Moda', serif;
-    font-weight: 900; /* Extra thick like Cartier Book */
+    font-weight: 900; 
     font-style: bold;
     font-size: 45px;
     text-transform: uppercase;
@@ -89,7 +92,7 @@ body {
 }
 
 .clinic-text p {
-    margin-top: -4px;
+    margin-top: -40px;
     opacity: 0.9;
     font-style: italic;
     font-size: 30px;
@@ -99,9 +102,9 @@ body {
 /* LOGIN FORM POSITION */
 .login-panel {
     position: absolute;
-    left: 75%; /* Middle of the right half */
+    left: 75%; 
     top: 35%;
-    transform: translate(-50%, -50%); /* Centers the form on that 75% line */
+    transform: translate(-50%, -50%); 
     width: 400px;
     display: flex;
     flex-direction: column;
@@ -113,16 +116,18 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+    border-radius: 3%;
     width: 100%;
     padding: 35px;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    box-shadow: 2px 2px 10px #444;
     background: transparent;
     opacity: 0;
-    transform: translateX(50px); /* Slides in from the right */
+    transform: translateX(50px); 
     animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; /* Starts after logo moves */
+    animation-delay: 1.2s; 
 }
 
 .login-form .error {
@@ -146,7 +151,6 @@ body {
 .input-group {
     position: relative;
     border-bottom: 2px solid #333;
-    /* The dark underline */
 }
 
 .input-group input {
@@ -171,7 +175,6 @@ body {
     font-size: 20px;
 }
 
-/* ROW FOR REMEMBER ME & FORGOT PASSWORD */
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -202,44 +205,44 @@ body {
 .login-form button {
     margin-top: 10px;
     padding: 15px;
-    /* Gradient from black to greyish as seen in image */
-    background: linear-gradient(to right, #000000 0%, #000000 40%, #666666 100%);
+    background: linear-gradient(to right, #536456 0%, #0a5318 50%, #536456 100%);
     border: none;
     color: white;
     font-size: 20px;
     font-weight: 900;
+    border-radius: 3%;  
     cursor: pointer;
     transition: opacity 0.3s ease;
 }
 
 .login-form button:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .yakap-text {
     position: absolute;
-    left: 8%; /* Middle of the right half */
-    padding-bottom: 25%;
-    transform: translateX(50px); /* Slides in from the right */
+    left: 8%; 
+    padding-bottom: 85%;
+    transform: translateX(50px); 
     width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; /* Starts after logo moves */
+    animation-delay: 1.2s; 
     opacity: 0;
 }
 
 /* "PhilHealth" Text */
 .yakap-text h1 {
-    color: #49bd60;
+    color: #47c460;
     font-family: 'Montserrat', sans-serif;
     font-weight: 800;
-    font-size: 88px;
+    font-size: 80px;
     margin: 0;
     letter-spacing: -2px;
-    text-shadow: 0 0 10px rgba(163, 150, 127, 0.4);
+    text-shadow: 0 0 10px rgba(224, 216, 202, 0.4);
 }
 
 /* "YAKAP" Text */
@@ -247,7 +250,7 @@ body {
     color: #e6c04f;
     font-family: 'Fredoka', 'Fredoka One', cursive;
     font-weight: 700;
-    font-size: 115px;
+    font-size: 100px;
     margin-top: -30px;
     text-transform: uppercase;
     text-shadow: 0 0 10px rgba(14, 11, 5, 0.4);
@@ -269,9 +272,9 @@ body {
     gap: 15px;
     background: transparent;
     opacity: 0;
-    transform: translateX(50px); /* Slides in from the right */
+    transform: translateX(50px);
     animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; /* Starts after logo moves */
+    animation-delay: 1.2s; 
 }
 
 .otp-form .error {
@@ -297,7 +300,6 @@ body {
 .otp-form button {
     margin-top: 10px;
     padding: 15px;
-    /* Gradient from black to greyish as seen in image */
     background: linear-gradient(to right, #000000 0%, #000000 40%, #666666 100%);
     border: none;
     color: white;
@@ -319,19 +321,15 @@ body {
 
 #countdown {
     font-family: 'Paytone One', 'Fredoka', sans-serif;
-    /* Same as YAKAP */
     font-size: 40px;
     color: #e6bf4b;
-    /* That YAKAP yellow */
     text-shadow: 0 0 10px rgba(230, 191, 75, 0.3);
-    /* Soft blur to save the eyes */
     margin: 0;
     line-height: 1;
 }
 
 .timer-container p {
     color: #49bd60;
-    /* That PhilHealth green */
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -341,36 +339,28 @@ body {
 /* FOOTER STYLING */
 .auth-footer {
     position: fixed;
-    bottom: 20px;
-    /* Distance from the bottom */
+    bottom: -13px;
     left: 90%;
     transform: translateX(-50%);
-    /* Centers it horizontally */
-    width: auto;
+    width: 180%;
     z-index: 100;
-    opacity: 0;
-    /* Subtle fade in after the forms appear */
-    animation: fadeInFooter 1s ease forwards;
-    animation-delay: 1.2s;
+    background: #1e8a34;
 }
 
 .auth-footer img {
-    height: 100px;
-    /* Adjust this to make it smaller or larger */
+    margin-left: 48%;
+    height: 80px;
     width: auto;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
     display: block;
 }
 
-/* Simple fade animation for the footer */
 @keyframes fadeInFooter {
     to {
         opacity: 0.8;
-        /* Slightly transparent to look professional */
     }
 }
 
-/* Hide footer on very small screens to avoid clutter */
 @media (max-height: 600px) {
     .auth-footer {
         display: none;

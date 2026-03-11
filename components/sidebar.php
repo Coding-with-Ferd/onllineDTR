@@ -24,7 +24,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
         <a href="../pages/index.php"><i class="bi bi-house-door"></i> <span>Dashboard</span></a>
         <a href="../pages/employees.php"><i class="bi bi-people"></i> <span>Employees</span></a>
         <a href="../pages/attendance.php"><i class="bi bi-calendar-check"></i> <span>Attendance</span></a>
-        <a href="../pages/daily_status.php"><i class="bi bi-clipboard-data"></i> <span>Daily Status</span></a>
+        <a href="../pages/appointment.php"><i class="bi bi-calendar-check"></i> <span>Appointment</span></a>
+        <a href="../pages/daily_status.php"><i class="bi bi-clipboard-data"></i> <span>Branch Status</span></a>
+        <a href="../pages/calendar.php"><i class="bi bi-calendar-check"></i> <span>Calendar</span></a>
         <a href="?action=logout"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a>
     </nav>
 </div>

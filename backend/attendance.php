@@ -70,6 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header("Location: ../pages/attendance.php");
+    header("Location: ../pages/profile.php");
     exit;
 }
