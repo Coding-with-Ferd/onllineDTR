@@ -1,6 +1,11 @@
 <?php
-session_start();
-include '../auth/db_connect.php';
+require_once '../config/session.php';
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
+}
 
 // Fetch all employees
 $query = $conn->query("SELECT * FROM employees ORDER BY last_name ASC");
@@ -42,20 +47,21 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
             <!-- Main content -->
             <div class="main-layer">
                 <div class="content">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h1>Employees</h1>
+                    <div class="employee-header">
+                        <div class="employee-text">
+                            <h1>Employees</h1>
+                            <p>Manage employee records.</p>
+                        </div>
                         <a href="add_employee.php" class="add-btn"><i class="bi bi-plus-lg"></i> Add Employee</a>
                     </div>
 
                     <table class="employee-table">
                         <thead>
                             <tr>
-                                <th>Employee Number</th>
-                                <th>Name</th>
+                                <th>Employee</th>
                                 <th>Position</th>
-                                <th>Position Type</th>
-                                <th>Email</th>
-                                <th>Phone</th>
+                                <th>Type</th>
+                                <th>Contact Info</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -64,26 +70,39 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                             <?php if (count($employees) > 0): ?>
                                 <?php foreach ($employees as $emp): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($emp['employee_code']) ?></td>
                                         <td>
-                                            <a href="profile.php?id=<?= $emp['id'] ?>">
-                                                <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
-                                            </a>
+                                            <div class="user-cell">
+                                                <div class="user-avatar"><?= strtoupper(substr($emp['first_name'], 0, 1)) ?></div>
+                                                <div class="user-details">
+                                                    <a href="profile.php?id=<?= $emp['id'] ?>" class="user-employee">
+                                                        <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
+                                                    </a>
+                                                    <span class="user-code"><?= htmlspecialchars($emp['employee_code']) ?></span>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td><?= htmlspecialchars($emp['position']) ?></td>
-                                        <td><?= ucfirst($emp['position_type']) ?></td>
-                                        <td><?= htmlspecialchars($emp['email']) ?></td>
-                                        <td><?= htmlspecialchars($emp['phone']) ?></td>
-                                        <td><?= ucfirst($emp['status']) ?></td>
+                                        <td><span class="type-tag"><?= ucfirst($emp['position_type']) ?></span></td>
+                                        <td>
+                                            <div class="contact-cell">
+                                                <span><i class="bi bi-envelope"></i> <?= htmlspecialchars($emp['email']) ?></span>
+                                                <span><i class="bi bi-telephone"></i> <?= htmlspecialchars($emp['phone']) ?></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="status-pill <?= strtolower($emp['status']) ?>">
+                                                <?= ucfirst($emp['status']) ?>
+                                            </span>
+                                        </td>
                                         <td class="table-action">
-                                            <a href="edit_employee.php?id=<?= $emp['id'] ?>" class="edit">Edit</a>
-                                            <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a>
+                                            <a href="edit_employee.php?id=<?= $emp['id'] ?>" class="edit-icon" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                            <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete-icon delete-confirm" title="Delete"><i class="bi bi-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="7" style="text-align:center;">No employees found.</td>
+                                    <td colspan="6" class="empty-state">No employees found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -153,6 +172,7 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
     </div>
     <script src="../assets/js/sidebar.js"></script>
     <script src="../assets/js/modal.js"></script>
+    <script src="../assets/js/delete.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 

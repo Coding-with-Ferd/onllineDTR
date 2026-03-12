@@ -29,7 +29,14 @@ include '../backend/profile.php';
 
             <div class="content">
                 <div class="employee-container">
-
+                    <div class="print-only-header">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h1 style="margin: 0; font-size: 24px;">PRIMEHEALTH CLINIC</h1>
+                            <h2 style="margin: 0; font-size: 18px; text-transform: uppercase;">Daily Time Record</h2>
+                            <p style="margin: 5px 0; font-size: 14px;">Employee Name: <strong><?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?></strong></p>
+                            <p style="margin: 0; font-size: 12px;">ID Code: <?= htmlspecialchars($emp['employee_code']) ?> | Position: <?= htmlspecialchars($emp['position']) ?></p>
+                        </div>
+                    </div>
                     <div class="time-section">
                         <div class="table-header-actions">
                             <h2><i class="bi bi-clock-history"></i> Attendance History</h2>
@@ -55,7 +62,7 @@ include '../backend/profile.php';
                                     <?php endif; ?>
                                 </form>
 
-                                
+
                                 <a href="javascript:window.print()" class="btn-print" style="height: 45px; display: flex; align-items: center;"><i class="bi bi-printer"></i></a>
                             </div>
                         </div>
@@ -145,20 +152,6 @@ include '../backend/profile.php';
                                 <i class="bi bi-arrow-left"></i> Back to Employee List
                             </a>
 
-                            <div class="action-buttons">
-                                <form action="../backend/attendance.php" method="POST" style="display:flex; gap:10px;">
-                                    <input type="hidden" name="employee_id" value="<?= $id ?>">
-                                    <input type="hidden" name="date" value="<?= $today ?>">
-
-                                    <button type="submit" name="timein" class="btn-timein" <?= isset($attendance['time_in']) ? 'disabled' : '' ?>>
-                                        Time In
-                                    </button>
-
-                                    <button type="submit" name="timeout" class="btn-timeout" <?= !isset($attendance['time_in']) || isset($attendance['time_out']) ? 'disabled' : '' ?>>
-                                        Time Out
-                                    </button>
-                                </form>
-                            </div>
                         </div>
                     </div>
 

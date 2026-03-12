@@ -1,6 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+require_once '../config/session.php';
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
 }
 // include '../backend/branch_logic.php'; 
 ?>

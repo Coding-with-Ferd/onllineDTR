@@ -1,10 +1,5 @@
 <?php
-session_start();
 include '../auth/db_connect.php';
-
-// Fetch all employees
-$query = $conn->query("SELECT * FROM employees ORDER BY last_name ASC");
-$employees = $query->fetch_all(MYSQLI_ASSOC);
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 

@@ -1,13 +1,36 @@
+.main-layer {
+    padding: 30px;
+    background: #f8fafc;
+}
+
+.employee-header {
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center;
+}
+
+.employee-text h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.employee-text p {
+    color: #64748b;
+    margin-top: 4px;
+}
+
 /* Table Container styling */
 .employee-table {
     width: 100%;
-    border-collapse: separate; 
+    border-collapse: separate;
     border-spacing: 0;
     margin-top: 24px;
     background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #edf2f7; 
+    border: 1px solid #edf2f7;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
@@ -36,11 +59,11 @@
 }
 
 .employee-table tr:hover {
-    background-color: #f7fafc; 
+    background-color: #f7fafc;
 }
 
 .add-btn {
-    background: #1f851d; 
+    background: #1f851d;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -89,4 +112,114 @@
 .table-action a.delete:hover {
     background-color: #fed7d7;
     color: #c53030;
+}
+
+/* Card Wrapper */
+.content-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+/* User Cell Styling */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.user-employee {
+    font-weight: 600;
+    color: #2d3748;
+    text-decoration: none;
+    display: block;
+}
+
+.user-employee:hover {
+    color: #0099ff;
+}
+
+.user-code {
+    font-size: 12px;
+    color: #a0aec0;
+}
+
+/* Contact & Tags */
+.contact-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #718096;
+}
+
+.contact-cell i {
+    font-size: 11px;
+}
+
+.type-tag {
+    font-size: 12px;
+    color: #4a5568;
+    background: #edf2f7;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* Modern Status Pills */
+.status-pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pill.active {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.status-pill.inactive {
+    background: #fed7d7;
+    color: #822727;
+}
+
+/* Table Action Icons */
+.table-action {
+    white-space: nowrap;
+}
+
+.table-action a {
+    font-size: 18px;
+    margin: 0 5px;
+    background: none !important;
+    padding: 0 !important;
+}
+
+.edit-icon {
+    color: #3182ce;
+}
+
+.delete-icon {
+    color: #e53e3e;
 }

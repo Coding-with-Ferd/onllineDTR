@@ -1,5 +1,13 @@
 <?php
-include '../backend/attendance.php';
+require_once '../config/session.php';
+require_once '../auth/db_connect.php';
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
+}
+
 date_default_timezone_set('Asia/Manila');
 
 $month = isset($_GET['month']) ? (int)$_GET['month'] : date('n');
@@ -94,7 +102,6 @@ $next_year = ($month == 12) ? $year + 1 : $year;
         </div>
     </div>
     <script src="../assets/js/sidebar.js"></script>
-    <script src="../assets/js/modal.js"></script>
 </body>
 
 </html>

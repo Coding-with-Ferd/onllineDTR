@@ -1,4 +1,12 @@
 <?php
+require_once '../config/session.php';
+require_once '../auth/db_connect.php';
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
+}
 // include '../backend/appointment_logic.php'; 
 ?>
 
@@ -92,7 +100,6 @@
         </div>
     </div>
     <script src="../assets/js/sidebar.js"></script>
-    <script src="../assets/js/modal.js"></script>
 </body>
 
 </html>

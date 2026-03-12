@@ -94,9 +94,8 @@ header .datetime {
 /* Content area */
 .content {
     flex: 1;
-    padding: 20px;
     overflow-y: auto;
-    background-color: #f5f5f5;
+    background-color: #f8fafc;
 }
 
 /* Sidebar toggle button */
