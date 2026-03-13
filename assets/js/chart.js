@@ -51,12 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             data: data.absent,
                             borderColor: '#e53e3e',
                             backgroundColor: redGrad,
-                            borderWidth: 2,
-                            borderDash: [5, 5], 
+                            borderWidth: 3,
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 0,
-                            pointHoverRadius: 5
+                            pointRadius: 2,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#e53e3e',
+                            pointBorderWidth: 2
                         }
                     ]
                 },

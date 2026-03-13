@@ -8,7 +8,8 @@ include '../backend/profile.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - <?= htmlspecialchars($emp['first_name']) ?></title>
+    <title>PrimeHealth Clinic</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="../assets/main.css">
@@ -114,12 +115,18 @@ include '../backend/profile.php';
                         </div>
                     </div>
 
-                    <div class="info-section">
+                    <div class="info-section" style="text-transform: uppercase;">
                         <h2><i class="bi bi-person-badge"></i> Employee Details</h2>
                         <table class="details-table">
                             <tr>
-                                <td class="label">ID Code</td>
+                                <td class="label">Employee Number</td>
                                 <td class="value">#<?= htmlspecialchars($emp['employee_code']) ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Fullname</td>
+                                <td class="value">
+                                    <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="label">Position</td>
@@ -129,7 +136,7 @@ include '../backend/profile.php';
                                 <td class="label">Type</td>
                                 <td class="value"><?= htmlspecialchars($emp['position_type'] ?? 'Regular') ?></td>
                             </tr>
-                            <tr>
+                            <tr style="text-transform: lowercase;">
                                 <td class="label">Email</td>
                                 <td class="value" style="font-size: 0.85rem;"><?= htmlspecialchars($emp['email']) ?></td>
                             </tr>

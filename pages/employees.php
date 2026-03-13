@@ -18,7 +18,8 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employees - PrimeHealth</title>
+    <title>PrimeHealth Clinic</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -85,7 +86,7 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                                         <td><span class="type-tag"><?= ucfirst($emp['position_type']) ?></span></td>
                                         <td>
                                             <div class="contact-cell">
-                                                <span><i class="bi bi-envelope"></i> <?= htmlspecialchars($emp['email']) ?></span>
+                                                <span style="text-transform: lowercase;"><i class="bi bi-envelope"></i> <?= htmlspecialchars($emp['email']) ?></span>
                                                 <span><i class="bi bi-telephone"></i> <?= htmlspecialchars($emp['phone']) ?></span>
                                             </div>
                                         </td>
@@ -145,7 +146,7 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="email">
+                                <input type="email" name="email" style="text-transform: lowercase;">
                             </div>
                             <div class="form-group">
                                 <label>Phone</label>

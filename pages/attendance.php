@@ -21,7 +21,8 @@ if (!function_exists('formatTime')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance - PrimeHealth</title>
+    <title>PrimeHealth Clinic</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="../assets/sidebar.css">
@@ -117,24 +118,6 @@ if (!function_exists('formatTime')) {
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <tr>
-                                        <td>
-                                            <div class="user-cell">
-                                                <div class="user-avatar absent-initial"><?= $initial ?></div>
-                                                <div class="user-details">
-                                                    <span class="user-name muted-text"><?= $fullName ?></span>
-                                                    <span class="position-tag"><?= htmlspecialchars($emp['position']) ?></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="muted-text">-</td>
-                                        <td class="muted-text">-</td>
-                                        <td class="muted-text">-</td>
-                                        <td class="muted-text" style="text-align:right;">-</td>
-                                        <td style="text-align:center;">
-                                            <span class="status-badge status-absent">Absent</span>
-                                        </td>
-                                    </tr>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </tbody>
@@ -156,7 +139,7 @@ if (!function_exists('formatTime')) {
 
                     <div class="input-group">
                         <label>Select Employee</label>
-                        <select name="employee_id" required>
+                        <select name="employee_id" required style="text-transform: uppercase;">
                             <option value="" disabled selected>Choose an employee...</option>
                             <?php foreach ($employees as $emp): ?>
                                 <option value="<?= $emp['id'] ?>">
@@ -168,7 +151,7 @@ if (!function_exists('formatTime')) {
 
                     <div class="input-group">
                         <label>Status</label>
-                        <select name="status" id="statusSelect" required onchange="updateAttendanceUI()">
+                        <select name="status" id="statusSelect" style="text-transform: uppercase;" required onchange="updateAttendanceUI()">
                             <option value="Present" selected>Present</option>
                             <option value="Absent">Absent</option>
                             <option value="SNW Holiday">SNW Holiday</option>
@@ -180,16 +163,16 @@ if (!function_exists('formatTime')) {
                     <div class="action-buttons-modal">
                         <div id="timeInContainer" style="display: flex; gap: 10px; flex: 2;">
                             <button type="submit" name="timein" class="btn-timein">
-                                <i class="bi bi-box-arrow-in-right"></i> Time In
+                                <i class="bi bi-box-arrow-in-right"></i> TIME IN
                             </button>
                             <button type="submit" name="timeout" class="btn-timeout">
-                                <i class="bi bi-box-arrow-left"></i> Time Out
+                                <i class="bi bi-box-arrow-left"></i> TIME OUT
                             </button>
                         </div>
 
                         <button type="submit" name="save_status" id="btnSaveStatus"
                             style="display: none; background-color: #f0f4f8; color: #555; border: 1px solid #d1d9e0; flex: 1; border-radius: 8px; font-weight: 700; padding: 10px;">
-                            <i class="bi bi-check-circle"></i> Save Status
+                            <i class="bi bi-check-circle"></i> SAVE STATUS
                         </button>
                     </div>
                 </div>

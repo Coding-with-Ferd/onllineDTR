@@ -5,6 +5,7 @@ date_default_timezone_set('Asia/Manila');
 
 $labels = [];
 $present = [];
+$absent = [];
 
 for($i = 6; $i >= 0; $i--){
 
@@ -17,6 +18,13 @@ $stmt->execute();
 $result = $stmt->get_result()->fetch_assoc();
 
 $present[] = $result['total'] ?? 0;
+
+$stmt = $conn->prepare("SELECT COUNT(*) as total FROM attendance WHERE attendance_date = ? AND status='absent'");
+$stmt->bind_param("s",$date);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
+
+$absent[] = $result['total'] ?? 0;
 
 }
 
@@ -31,6 +39,7 @@ $absentToday = $totalEmployees - $presentToday;
 echo json_encode([
 "labels"=>$labels,
 "present"=>$present,
+"absent"=>$absent,
 "totalEmployees"=>$totalEmployees,
 "presentToday"=>$presentToday,
 "absentToday"=>$absentToday
