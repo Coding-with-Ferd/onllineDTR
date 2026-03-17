@@ -36,6 +36,7 @@ function setUserSession($userData, $remember = false, $skipOTP = false)
     $_SESSION['user_name'] = $userData['FullName'];
     $_SESSION['user_email'] = $userData['Email'];
     $_SESSION['user_role'] = $userData['Role'];
+    $_SESSION['user_photo'] = $userData['Photo'] ?? $userData['photo'] ?? '';
     $_SESSION['logged_in_time'] = time();
 
     if ($remember) {

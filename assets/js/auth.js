@@ -32,12 +32,15 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
     .then(data => {
 
         if (data.status === 'success') {
-
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('otp-section').style.display = 'block';
-
-            startTimer(60);
-
+            if (data.redirect) {
+                // Instantly redirect if the user is an Employee (skips OTP)
+                window.location.href = data.redirect;
+            } else {
+                // Otherwise show OTP section (Admin)
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('otp-section').style.display = 'block';
+                startTimer(60);
+            }
         } else {
 
             const err = document.getElementById('login-error');

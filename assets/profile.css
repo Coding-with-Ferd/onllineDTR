@@ -75,6 +75,7 @@
     flex: 2.5;
     background: #fff;
     padding: 32px;
+    margin-left: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     border: 1px solid #edf2f7;
@@ -84,6 +85,7 @@
     flex: 1;
     background: #fff;
     padding: 32px;
+    margin-right: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     border: 1px solid #edf2f7;
@@ -258,9 +260,54 @@ h2 {
     text-decoration: none;
     color: #555;
     display: flex;
+}
+
+.photo-uploader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #1a6d18;
+    background-color: #edf2f7;
+    display: inline-flex;
+    justify-content: center;
     align-items: center;
-    gap: 5px;
-    font-weight: 600;
+    color: #1a6d18;
+    font-size: 32px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-top,
+.profile-photo-form,
+.photo-controls,
+.btn-upload {
+    display: none !important;
+}
+
+.alert-success {
+    border: 1px solid #d1fae5;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.alert-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
 }
 
 @media print {

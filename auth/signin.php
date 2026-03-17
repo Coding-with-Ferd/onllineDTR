@@ -39,7 +39,7 @@
                 <form class="login-form" id="login-form">
                     <p class="error" id="login-error" style="color:red; display:none;"></p>
                     <div class="input-group">
-                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="text" name="email" placeholder="Email or Employee Code" required>
                         <i class="bi bi-envelope"></i>
                     </div>
                     <div class="input-group">

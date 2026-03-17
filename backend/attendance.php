@@ -132,7 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'icon' => $icon
     ];
 
-    $referer = $_SERVER['HTTP_REFERER'] ?? '../pages/attendance_list.php';
+    if (isset($_POST['user_dashboard_redirect'])) {
+        $referer = '../pages/user_dashboard.php';
+    } else {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '../pages/attendance_list.php';
+    }
+    
     header("Location: " . $referer);
     exit;
 }

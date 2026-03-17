@@ -30,6 +30,14 @@ include '../backend/profile.php';
 
             <div class="content">
                 <div class="employee-container">
+
+                    <?php if (isset($_SESSION['notif'])): ?>
+                        <div class="alert <?= $_SESSION['notif']['icon'] === 'success' ? 'alert-success' : 'alert-error' ?>" style="margin-bottom: 16px; padding: 12px; border-radius: 8px;">
+                            <?= htmlspecialchars($_SESSION['notif']['message']) ?>
+                        </div>
+                        <?php unset($_SESSION['notif']); ?>
+                    <?php endif; ?>
+
                     <div class="print-only-header">
                         <div style="text-align: center; margin-bottom: 20px;">
                             <h1 style="margin: 0; font-size: 24px;">PRIMEHEALTH CLINIC</h1>
@@ -38,6 +46,7 @@ include '../backend/profile.php';
                             <p style="margin: 0; font-size: 12px;">ID Code: <?= htmlspecialchars($emp['employee_code']) ?> | Position: <?= htmlspecialchars($emp['position']) ?></p>
                         </div>
                     </div>
+
                     <div class="time-section">
                         <div class="table-header-actions">
                             <h2><i class="bi bi-clock-history"></i> Attendance History</h2>
@@ -116,6 +125,21 @@ include '../backend/profile.php';
                     </div>
 
                     <div class="info-section" style="text-transform: uppercase;">
+                        <div class="photo-uploader">
+                            <form method="post" enctype="multipart/form-data" id="photoUploadForm">
+                                <input type="hidden" name="id" value="<?= $id ?>">
+                                <input type="hidden" name="upload_photo" value="1">
+                                <input type="file" name="profile_photo" id="profile_photo" accept="image/*" style="display:none;" onchange="this.form.submit();">
+                                <button type="button" class="profile-avatar" onclick="document.getElementById('profile_photo').click();" aria-label="Upload profile image">
+                                    <?php if (!empty($emp['photo'])): ?>
+                                        <img src="../<?= htmlspecialchars($emp['photo']) ?>" alt="Profile photo">
+                                    <?php else: ?>
+                                        <span><?= htmlspecialchars(substr($emp['first_name'],0,1) . substr($emp['last_name'],0,1)) ?></span>
+                                    <?php endif; ?>
+                                </button>
+                            </form>
+                        </div>
+
                         <h2><i class="bi bi-person-badge"></i> Employee Details</h2>
                         <table class="details-table">
                             <tr>
@@ -159,6 +183,23 @@ include '../backend/profile.php';
                                 <i class="bi bi-arrow-left"></i> Back to Employee List
                             </a>
 
+                            <?php 
+                            // Only Admins can generate accounts
+                            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): 
+                            ?>
+                                <form action="../backend/generate_account.php" method="POST" style="margin: 0;">
+                                    <input type="hidden" name="employee_id" value="<?= $id ?>">
+                                    <?php if ($hasUserAccount): ?>
+                                        <button type="button" class="btn-generate-acc" disabled style="background: #e0e0e0; color: #9e9e9e; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: not-allowed; display: flex; align-items: center; gap: 8px;" title="Account already exists for this employee.">
+                                            <i class="bi bi-person-check-fill"></i> Account Exists
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="button" class="btn-generate-acc" onclick="confirmGenerateAcc(this.form)" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                            <i class="bi bi-person-plus-fill"></i> Generate Acc
+                                        </button>
+                                    <?php endif; ?>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -168,6 +209,24 @@ include '../backend/profile.php';
     </div>
 
     <script src="../assets/js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmGenerateAcc(form) {
+            Swal.fire({
+                title: 'Generate Account?',
+                text: "This will create a new user account for this employee using their Employee Code as the email.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, generate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

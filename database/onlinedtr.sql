@@ -69,6 +69,7 @@ CREATE TABLE `employees` (
   `position` varchar(100) DEFAULT NULL,
   `position_type` enum('Employee','Intern') DEFAULT 'Employee',
   `email` varchar(100) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `hire_date` date DEFAULT NULL,
   `status` enum('active','inactive') DEFAULT 'active',
