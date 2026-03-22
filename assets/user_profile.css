@@ -1,0 +1,506 @@
+.table-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-print {
+    background: #333;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.btn-print:hover {
+    background: #000;
+}
+
+.pagination {
+    display: flex;
+    gap: 5px;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.pagination a.active {
+    background: #1a6d18;
+    color: white;
+    border-color: #1a6d18;
+}
+
+.pagination span {
+    padding: 0 10px;
+    color: #999;
+}
+
+@media print {
+
+    .sidebar,
+    .header,
+    .footer-container,
+    .btn-print,
+    .pagination {
+        display: none !important;
+    }
+
+    .main {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* --- PROFILE LAYOUT --- */
+.employee-container {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.time-section {
+    flex: 2.5;
+    background: #fff;
+    padding: 32px;
+    margin-left: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+}
+
+.info-section {
+    flex: 1;
+    background: #fff;
+    padding: 32px;
+    margin-right: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+}
+
+h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-table,
+.details-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.time-table th {
+    text-align: left;
+    padding: 16px;
+    background: #f8fafc;
+    color: #718096;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.time-table td {
+    padding: 20px 16px;
+    border-bottom: 1px solid #edf2f7;
+    color: #2d3748;
+    font-size: 0.95rem;
+}
+
+.details-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.details-table tr:last-child td {
+    border: none;
+}
+
+.label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #718096;
+    text-transform: uppercase;
+    width: 40%;
+}
+
+.value {
+    color: #2d3748;
+    font-weight: 500;
+    text-align: right;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background: #def7ec;
+    color: #03543f;
+}
+
+.status-inactive {
+    background: #fde8e8;
+    color: #9b1c1c;
+}
+
+.btn-timein,
+.btn-timeout {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-timein {
+    background: #1a6d18;
+    color: #fff;
+}
+
+.btn-timein:disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    cursor: not-allowed;
+}
+
+.btn-timeout {
+    background: #fff5f5;
+    color: #e53e3e;
+    border: 1px solid #feb2b2;
+}
+
+.btn-timeout:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: #718096;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #1a6d18;
+}
+
+.footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-timein,
+.btn-timeout {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-timein {
+    background-color: #1a6d18;
+    color: white;
+}
+
+.btn-timeout {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-timein:disabled,
+.btn-timeout:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.back-btn {
+    margin-top: 10px;
+    text-decoration: none;
+    color: #555;
+    display: flex;
+}
+
+.photo-uploader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #1a6d18;
+    background-color: #edf2f7;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #1a6d18;
+    font-size: 32px;
+    font-weight: 700;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-top,
+.profile-photo-form,
+.photo-controls,
+.btn-upload {
+    display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .employee-container {
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .time-section {
+        flex: none;
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .info-section {
+        flex: none;
+        margin-right: 0;
+        padding: 20px;
+    }
+
+    .table-header-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .time-table th,
+    .time-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    .details-table .label {
+        width: 50%;
+        font-size: 0.75rem;
+    }
+
+    .details-table .value {
+        font-size: 0.9rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .employee-container {
+        gap: 12px;
+    }
+
+    .time-section,
+    .info-section {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .time-table {
+        font-size: 0.8rem;
+    }
+
+    .time-table th,
+    .time-table td {
+        padding: 8px 4px;
+    }
+
+    .details-table .label {
+        width: 60%;
+        font-size: 0.7rem;
+    }
+
+    .details-table .value {
+        font-size: 0.85rem;
+    }
+
+    .btn-print {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .pagination a {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 18px;
+    }
+
+    h2 {
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+
+    .footer-container {
+        padding-top: 16px;
+    }
+
+    .back-btn {
+        font-size: 0.8rem;
+    }
+}
+
+.alert-success {
+    border: 1px solid #d1fae5;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.alert-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+@media print {
+    form, .pagination, .sidebar, .back-btn, .action-buttons, .header {
+        display: none !important;
+    }
+    .employee-container { border: none; }
+}
+
+.print-only-header {
+    display: none;
+}
+
+@media print {
+    /* Hide everything except the employee-container */
+    .sidebar, .header, .pagination, .back-btn, .action-buttons, .table-header-actions form, .toggle-btn {
+        display: none !important;
+    }
+
+    /* Reset background and padding for the page */
+    body, .main, .content, .dashboard {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+    }
+
+    .employee-container {
+        display: block !important;
+        box-shadow: none !important;
+        padding: -20px !important;
+        margin-right: 50px;
+    }
+
+    /* Show the professional header */
+    .print-only-header {
+        display: block !important;
+        border-bottom: 2px solid #333;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+    }
+
+    /* Style the table like a formal DTR */
+    .time-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 20px;
+    }
+
+    .time-table th, .time-table td {
+        border: 1px solid #000 !important; /* Thick black borders for DTR */
+        padding: 10px !important;
+        color: black !important;
+        font-size: 12px !important;
+    }
+
+    .time-table th {
+        background-color: #f0f0f0 !important;
+    }
+
+    /* Add a Signature Line at the bottom */
+    .employee-container::after {
+        content: "I hereby certify that the above is a true and correct report of my attendance.\n\n\n__________________________\nEmployee Signature";
+        display: block;
+        margin-top: 50px;
+        white-space: pre;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* Hide the Info Section (sidebar details) if you only want the table */
+    .info-section {
+        display: none;
+    }
+
+    .time-section {
+        width: 100% !important;
+    }
+}
