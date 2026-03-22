@@ -52,6 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
         mkdir($uploadDir, 0755, true);
     }
 
+    // Delete old photo if exists
+    $oldPhotoStmt = $conn->prepare("SELECT photo FROM employees WHERE id = ?");
+    $oldPhotoStmt->bind_param("i", $id);
+    $oldPhotoStmt->execute();
+    $oldPhotoResult = $oldPhotoStmt->get_result();
+    $oldPhoto = $oldPhotoResult->fetch_assoc()['photo'];
+    if ($oldPhoto && file_exists(__DIR__ . '/../' . $oldPhoto)) {
+        unlink(__DIR__ . '/../' . $oldPhoto);
+    }
+    $oldPhotoStmt->close();
+
     $newFileName = 'employee_' . $id . '_' . time() . '.' . $fileExt;
     $targetPath = $uploadDir . DIRECTORY_SEPARATOR . $newFileName;
 
@@ -64,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
     $photoPath = 'assets/uploads/' . $newFileName;
     $updateStmt = $conn->prepare("UPDATE employees SET photo = ? WHERE id = ?");
     $updateStmt->bind_param('si', $photoPath, $id);
-
+    $updateStmt->execute();
     $updateStmt->close();
     header("Location: profile.php?id={$id}");
     exit;

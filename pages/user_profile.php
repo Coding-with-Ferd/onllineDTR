@@ -60,6 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
         $uploadDir = __DIR__ . '/../assets/uploads';
     }
 
+    // Delete old photo if exists
+    $oldPhotoStmt = $conn->prepare("SELECT photo FROM employees WHERE id = ?");
+    $oldPhotoStmt->bind_param("i", $id);
+    $oldPhotoStmt->execute();
+    $oldPhotoResult = $oldPhotoStmt->get_result();
+    $oldPhoto = $oldPhotoResult->fetch_assoc()['photo'];
+    if ($oldPhoto && file_exists(__DIR__ . '/../' . $oldPhoto)) {
+        unlink(__DIR__ . '/../' . $oldPhoto);
+    }
+    $oldPhotoStmt->close();
+
     $newFileName = 'employee_' . $id . '_' . time() . '.' . $fileExt;
     $targetPath = $uploadDir . DIRECTORY_SEPARATOR . $newFileName;
 
@@ -94,7 +105,7 @@ if (!$emp) {
 $id = $emp['id'];
 
 // Pagination & Date Filter Logic
-$limit = 10; 
+$limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -125,7 +136,8 @@ $total_pages = ceil($total_rows / $limit);
 
 // Helper to format time
 if (!function_exists('formatTime')) {
-    function formatTime($time) {
+    function formatTime($time)
+    {
         return $time ? date('h:i A', strtotime($time)) : '-';
     }
 }
@@ -142,12 +154,8 @@ if (!function_exists('formatTime')) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="../assets/main.css">
-    <link rel="stylesheet" href="../assets/sidebar.css">
-    <link rel="stylesheet" href="../assets/header.css">
     <link rel="stylesheet" href="../assets/user_profile.css">
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="../assets/user_dashboard_header.css">
 </head>
 
 <body>
@@ -175,82 +183,6 @@ if (!function_exists('formatTime')) {
                         </div>
                     </div>
 
-                    <div class="time-section">
-                        <div class="table-header-actions">
-                            <h2><i class="bi bi-clock-history"></i> Attendance History</h2>
-
-                            <div style="display: flex; gap: 10px; align-items: flex-end;">
-                                    <form method="GET" style="display: flex; gap: 10px; align-items: flex-end; background: #f8f9fa; padding: 10px; border-radius: 8px; border: 1px solid #e9ecef;">
-
-                                        <div style="display: flex; flex-direction: column;">
-                                            <label style="font-size: 10px; font-weight: bold; color: #666;">FROM</label>
-                                            <input type="date" name="start_date" value="<?= $_GET['start_date'] ?? '' ?>" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
-                                        </div>
-
-                                        <div style="display: flex; flex-direction: column;">
-                                            <label style="font-size: 10px; font-weight: bold; color: #666;">TO</label>
-                                            <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
-                                        </div>
-
-                                        <button type="submit" class="btn-timein" style="padding: 7px 15px; height: 35px;">Filter</button>
-
-                                        <?php if (isset($_GET['start_date'])): ?>
-                                            <a href="user_profile.php" style="font-size: 17px; height: 25px; align-self: center; background: #dc3545; color: white; padding: 7px 15px; border-radius: 4px; text-decoration: none;">Clear</a>
-                                        <?php endif; ?>
-                                    </form>
-
-
-                                <a href="javascript:window.print()" class="btn-print" style="height: 45px; display: flex; align-items: center;"><i class="bi bi-printer"></i></a>
-                            </div>
-                        </div>
-
-                        <table class="time-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Time In</th>
-                                    <th>Time Out</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($attendance_history->num_rows > 0): ?>
-                                    <?php while ($row = $attendance_history->fetch_assoc()): ?>
-                                        <tr>
-                                            <td><strong><?= date('M d, Y', strtotime($row['attendance_date'])) ?></strong></td>
-                                            <td><?= formatTime($row['time_in']) ?></td>
-                                            <td><?= formatTime($row['time_out']) ?></td>
-                                            <td><span class="status-badge status-active">Present</span></td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="4" style="text-align:center; padding: 20px;">No records found for this range.</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-
-                        <div class="pagination">
-                            <?php
-                            // Build query string for pagination links so filter stays active
-                            $query_str = "&start_date=" . ($_GET['start_date'] ?? '') . "&end_date=" . ($_GET['end_date'] ?? '');
-                            ?>
-
-                            <?php if ($page > 1): ?>
-                                <a href="?id=<?= $id ?>&page=<?= $page - 1 ?><?= $query_str ?>">Prev</a>
-                            <?php endif; ?>
-
-                            <?php for ($i = 1; $i <= min($total_pages, 15); $i++): ?>
-                                <a href="?id=<?= $id ?>&page=<?= $i ?><?= $query_str ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a>
-                            <?php endfor; ?>
-
-                            <?php if ($page < $total_pages): ?>
-                                <a href="?id=<?= $id ?>&page=<?= $page + 1 ?><?= $query_str ?>">Next</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
                     <div class="info-section" style="text-transform: uppercase;">
                         <div class="photo-uploader">
                             <form method="post" enctype="multipart/form-data" id="photoUploadForm">
@@ -261,7 +193,7 @@ if (!function_exists('formatTime')) {
                                     <?php if (!empty($emp['photo'])): ?>
                                         <img src="../<?= htmlspecialchars($emp['photo']) ?>" alt="Profile photo">
                                     <?php else: ?>
-                                        <span><?= htmlspecialchars(substr($emp['first_name'],0,1) . substr($emp['last_name'],0,1)) ?></span>
+                                        <span><?= htmlspecialchars(substr($emp['first_name'], 0, 1) . substr($emp['last_name'], 0, 1)) ?></span>
                                     <?php endif; ?>
                                 </button>
                             </form>
@@ -312,28 +244,84 @@ if (!function_exists('formatTime')) {
                         </div>
                     </div>
 
+                    <div class="time-section">
+                        <div class="table-header-actions">
+                            <h2><i class="bi bi-clock-history"></i> Attendance History</h2>
+
+                            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                                <form method="GET" style="display: flex; gap: 10px; align-items: flex-end; background: #f8f9fa; padding: 10px; border-radius: 8px; border: 1px solid #e9ecef;">
+
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label style="font-size: 10px; font-weight: bold; color: #666;">FROM</label>
+                                        <input type="date" name="start_date" value="<?= $_GET['start_date'] ?? '' ?>" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label style="font-size: 10px; font-weight: bold; color: #666;">TO</label>
+                                        <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+
+                                    <button type="submit" class="btn-timein" style="padding: 7px 15px; height: 35px;">Filter</button>
+
+                                    <?php if (isset($_GET['start_date'])): ?>
+                                        <a href="user_profile.php" style="font-size: 17px; height: 25px; align-self: center; background: #dc3545; color: white; padding: 7px 15px; border-radius: 4px; text-decoration: none;">Clear</a>
+                                    <?php endif; ?>
+                                </form>
+
+                            </div>
+                        </div>
+
+                        <table class="time-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time In</th>
+                                    <th>Time Out</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($attendance_history->num_rows > 0): ?>
+                                    <?php while ($row = $attendance_history->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><strong><?= date('M d, Y', strtotime($row['attendance_date'])) ?></strong></td>
+                                            <td><?= formatTime($row['time_in']) ?></td>
+                                            <td><?= formatTime($row['time_out']) ?></td>
+                                            <td><span class="status-badge status-active">Present</span></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4" style="text-align:center; padding: 20px;">No records found for this range.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+
+                        <div class="pagination">
+                            <?php
+                            // Build query string for pagination links so filter stays active
+                            $query_str = "&start_date=" . ($_GET['start_date'] ?? '') . "&end_date=" . ($_GET['end_date'] ?? '');
+                            ?>
+
+                            <?php if ($page > 1): ?>
+                                <a href="?id=<?= $id ?>&page=<?= $page - 1 ?><?= $query_str ?>">Prev</a>
+                            <?php endif; ?>
+
+                            <?php for ($i = 1; $i <= min($total_pages, 15); $i++): ?>
+                                <a href="?id=<?= $id ?>&page=<?= $i ?><?= $query_str ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $total_pages): ?>
+                                <a href="?id=<?= $id ?>&page=<?= $page + 1 ?><?= $query_str ?>">Next</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function confirmGenerateAcc(form) {
-            Swal.fire({
-                title: 'Generate Account?',
-                text: "This will create a new user account for this employee using their Employee Code as the email.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, generate it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        }
-    </script>
 </body>
 
 </html>
