@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2026 at 06:38 PM
+-- Generation Time: Mar 28, 2026 at 12:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,6 +39,16 @@ CREATE TABLE `attendance` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`id`, `employee_id`, `attendance_date`, `time_in`, `time_out`, `status`, `total_hours`, `created_at`, `updated_at`) VALUES
+(12, 4, '2026-03-18', '11:22:40', NULL, 'Present', 0.00, '2026-03-18 11:22:40', '2026-03-18 11:22:40'),
+(13, 4, '2026-03-25', '11:35:57', '17:55:04', 'Present', 0.00, '2026-03-25 11:35:57', '2026-03-25 17:55:04'),
+(14, 8, '2026-03-25', NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
+(15, 8, '2026-03-26', NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45');
+
 -- --------------------------------------------------------
 
 --
@@ -53,6 +63,14 @@ CREATE TABLE `daily_status` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `daily_status`
+--
+
+INSERT INTO `daily_status` (`id`, `employee_id`, `status_date`, `status`, `created_at`, `updated_at`) VALUES
+(1, 8, '2026-03-25', 'on leave', '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
+(2, 8, '2026-03-26', 'on leave', '2026-03-25 14:57:45', '2026-03-25 14:57:45');
 
 -- --------------------------------------------------------
 
@@ -72,7 +90,7 @@ CREATE TABLE `employees` (
   `photo` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `hire_date` date DEFAULT NULL,
-  `status` enum('active','inactive') DEFAULT 'active',
+  `status` enum('active','inactive','on leave') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -81,8 +99,37 @@ CREATE TABLE `employees` (
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `last_name`, `middle_name`, `position`, `position_type`, `email`, `phone`, `hire_date`, `status`, `created_at`, `updated_at`) VALUES
-(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', '09636444567', '2026-01-13', 'active', '2026-03-08 15:09:28', '2026-03-08 15:09:28');
+INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `last_name`, `middle_name`, `position`, `position_type`, `email`, `photo`, `phone`, `hire_date`, `status`, `created_at`, `updated_at`) VALUES
+(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', 'assets/uploads/employee_4_1774409436.jpg', '09636444567', '2026-01-13', 'on leave', '2026-03-08 15:09:28', '2026-03-25 06:12:38'),
+(8, '70010102', 'stephannie ', 'dacula', 'compania', 'it staff', 'Employee', 'stephannniedacula16@gmail.com', 'assets/uploads/employee_8_1774432682.jpg', '09071438582', NULL, 'on leave', '2026-03-25 06:56:39', '2026-03-25 09:58:02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leave_requests`
+--
+
+CREATE TABLE `leave_requests` (
+  `id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `leave_type` enum('Vacation','Sick','Personal','Maternity','Paternity','Emergency') NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `reason` text DEFAULT NULL,
+  `status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `leave_requests`
+--
+
+INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type`, `start_date`, `end_date`, `reason`, `status`, `approved_by`, `approved_at`, `created_at`, `updated_at`) VALUES
+(2, 4, 'Vacation', '2026-03-25', '2026-03-27', 'Vacation Leave', 'Approved', NULL, '2026-03-25 14:12:38', '2026-03-25 06:12:21', '2026-03-25 06:12:38'),
+(3, 8, 'Sick', '2026-03-25', '2026-03-26', 'Sick Leave', 'Approved', NULL, '2026-03-25 14:57:45', '2026-03-25 06:57:38', '2026-03-25 06:57:45');
 
 -- --------------------------------------------------------
 
@@ -106,8 +153,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`UserID`, `FullName`, `Email`, `PasswordHash`, `Status`, `Role`, `CreatedAt`, `UpdatedAt`) VALUES
-(1, 'Ferdinand Tanilon', 'jokerferd@gmail.com', '$2y$10$O2Qma7wycyzlM29lu/RPgeFMiM5WDW.EuHkkSvgaQIMzezSf9eyDi', 'Active', 'Employee', '2026-03-07 10:31:35', '2026-03-11 13:39:11'),
-(2, 'Mark Padilla', 'ferdinandtanilon01@gmail.com', '$2y$10$esU2JJ/ctDncwIPB2soC3u0jP1wpZZqNCBEk9Qj2Xho5v/p54qAs2', 'Active', 'Employee', '2026-03-11 12:25:43', '2026-03-11 12:25:43');
+(1, 'Ferdinand Tanilon', 'jokerferd@gmail.com', '$2y$10$O2Qma7wycyzlM29lu/RPgeFMiM5WDW.EuHkkSvgaQIMzezSf9eyDi', 'Active', 'Admin', '2026-03-07 10:31:35', '2026-03-18 03:00:21'),
+(3, 'Ferdinand Tanilon', '26011301', '$2y$10$p8XsLmjbYLS5jyBT87WH9unqI0h.iDV7OPHl8hd2KdgqMezIZQ4Xu', 'Active', 'Employee', '2026-03-18 03:04:28', '2026-03-18 03:04:28');
 
 --
 -- Indexes for dumped tables
@@ -135,6 +182,14 @@ ALTER TABLE `employees`
   ADD UNIQUE KEY `employee_code` (`employee_code`);
 
 --
+-- Indexes for table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_employee` (`employee_id`),
+  ADD KEY `fk_approver` (`approved_by`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -148,25 +203,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `daily_status`
 --
 ALTER TABLE `daily_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -183,6 +244,13 @@ ALTER TABLE `attendance`
 --
 ALTER TABLE `daily_status`
   ADD CONSTRAINT `daily_status_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
+
+--
+-- Constraints for table `leave_requests`
+--
+ALTER TABLE `leave_requests`
+  ADD CONSTRAINT `fk_approver` FOREIGN KEY (`approved_by`) REFERENCES `employees` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
