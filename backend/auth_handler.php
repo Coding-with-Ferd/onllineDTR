@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             $response = [
                                 'success' => true,
                                 'status' => 'success',
-                                'redirect' => '../pages/user_dashboard.php',
+                                'redirect' => '../userpages/user_dashboard.php',
                                 'message' => 'Login successful'
                             ];
                         } 

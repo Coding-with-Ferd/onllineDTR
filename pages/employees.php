@@ -19,7 +19,7 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrimeHealth Clinic</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -91,12 +91,12 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="status-pill <?= strtolower($emp['status']) ?>">
+                                            <span class="status-pill <?= str_replace(' ', '-', strtolower($emp['status'])) ?>">
                                                 <?= ucfirst($emp['status']) ?>
                                             </span>
                                         </td>
                                         <td class="table-action">
-                                            <a href="edit_employee.php?id=<?= $emp['id'] ?>" class="edit-icon" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                            <button type="button" class="edit-icon edit-btn" data-id="<?= $emp['id'] ?>" data-first-name="<?= htmlspecialchars($emp['first_name']) ?>" data-middle-name="<?= htmlspecialchars($emp['middle_name']) ?>" data-last-name="<?= htmlspecialchars($emp['last_name']) ?>" data-position="<?= htmlspecialchars($emp['position']) ?>" data-position-type="<?= $emp['position_type'] ?>" data-email="<?= htmlspecialchars($emp['email']) ?>" data-phone="<?= htmlspecialchars($emp['phone']) ?>" data-hire-date="<?= $emp['hire_date'] ?>" data-status="<?= $emp['status'] ?>" title="Edit"><i class="bi bi-pencil-square"></i></button>
                                             <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete-icon delete-confirm" title="Delete"><i class="bi bi-trash"></i></a>
                                         </td>
                                     </tr>
@@ -157,10 +157,70 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                                 <select name="status">
                                     <option value="active" selected>Active</option>
                                     <option value="inactive">Inactive</option>
+                                    <option value="on leave">On Leave</option>
                                 </select>
                             </div>
                             <div class="modal-actions">
                                 <button type="submit" class="add-btn"><i class="bi bi-plus-lg"></i> Add Employee</button>
+                                <button type="button" class="close-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit Employee Modal -->
+                <div id="editEmployeeModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Edit Employee</h2>
+                        <form method="POST" action="../backend/employee.php">
+                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="employee_id" id="employeeId">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" name="first_name" id="editFirstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <input type="text" name="middle_name" id="editMiddleName">
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" id="editLastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hire Date</label>
+                                <input type="text" id="editDatePicker" name="hire_date" placeholder="Select Date..">
+                            </div>
+                            <div class="form-group">
+                                <label>Position</label>
+                                <input type="text" name="position" id="editPosition" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Position Type</label>
+                                <select name="position_type" id="editPositionType">
+                                    <option value="Employee">Employee</option>
+                                    <option value="Intern">Intern</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" id="editEmail" style="text-transform: lowercase;">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" name="phone" id="editPhone">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status" id="editStatus">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="on leave">On Leave</option>
+                                </select>
+                            </div>
+                            <div class="modal-actions">
+                                <button type="submit" class="add-btn"><i class="bi bi-check-lg"></i> Save Changes</button>
                                 <button type="button" class="close-btn">Cancel</button>
                             </div>
                         </form>
@@ -175,6 +235,92 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
     <script src="../assets/js/modal.js"></script>
     <script src="../assets/js/delete.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const editModal = document.getElementById("editEmployeeModal");
+            const editCloseBtn = editModal.querySelector(".close");
+            const editCancelBtn = editModal.querySelector(".close-btn");
+            const editButtons = document.querySelectorAll(".edit-btn");
+
+            // Initialize flatpickr for edit date picker
+            flatpickr("#editDatePicker", {
+                altInput: true,
+                altFormat: "F j, Y",
+                dateFormat: "Y-m-d",
+                disableMobile: "true",
+                static: true,
+                onReady: function(selectedDates, dateStr, instance) {
+                    const calendar = instance.calendarContainer;
+                    calendar.style.borderRadius = "12px";
+                    calendar.style.boxShadow = "0 10px 25px rgba(0,0,0,0.1)";
+                    calendar.style.zIndex = "9999"; 
+                }
+            });
+
+            // Close modal function
+            const closeEditModal = () => {
+                editModal.classList.remove("show");
+                setTimeout(() => {
+                    editModal.style.display = "none";
+                }, 300);
+            };
+
+            // Open modal with employee data
+            editButtons.forEach(btn => {
+                btn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    
+                    // Get employee data from data attributes
+                    const employeeId = this.dataset.id;
+                    const firstName = this.dataset.firstName;
+                    const middleName = this.dataset.middleName;
+                    const lastName = this.dataset.lastName;
+                    const position = this.dataset.position;
+                    const positionType = this.dataset.positionType;
+                    const email = this.dataset.email;
+                    const phone = this.dataset.phone;
+                    const hireDate = this.dataset.hireDate;
+                    const status = this.dataset.status;
+
+                    // Populate form fields
+                    document.getElementById("employeeId").value = employeeId;
+                    document.getElementById("editFirstName").value = firstName;
+                    document.getElementById("editMiddleName").value = middleName;
+                    document.getElementById("editLastName").value = lastName;
+                    document.getElementById("editPosition").value = position;
+                    document.getElementById("editPositionType").value = positionType;
+                    document.getElementById("editEmail").value = email;
+                    document.getElementById("editPhone").value = phone;
+                    document.getElementById("editStatus").value = status;
+
+                    // Set date picker value
+                    flatpickr("#editDatePicker", {
+                        altInput: true,
+                        altFormat: "F j, Y",
+                        dateFormat: "Y-m-d",
+                        defaultDate: hireDate,
+                        disableMobile: "true",
+                        static: true,
+                    });
+
+                    // Show modal
+                    editModal.style.display = "block";
+                    setTimeout(() => {
+                        editModal.classList.add("show");
+                    }, 10);
+                });
+            });
+
+            // Close modal events
+            editCloseBtn.addEventListener("click", closeEditModal);
+            editCancelBtn.addEventListener("click", closeEditModal);
+
+            // Close when clicking outside modal
+            window.addEventListener("click", (e) => {
+                if(e.target === editModal) closeEditModal();
+            });
+        });
+    </script>
 </body>
 
 </html>

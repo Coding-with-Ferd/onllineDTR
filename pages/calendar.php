@@ -31,7 +31,7 @@ $next_year = ($month == 12) ? $year + 1 : $year;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrimeHealth Clinic</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="../assets/sidebar.css">

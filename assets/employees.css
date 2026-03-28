@@ -162,7 +162,7 @@
 }
 
 .user-code {
-    font-size: 12px;
+    font-size: 15px;
     color: #a0aec0;
 }
 
@@ -205,6 +205,11 @@
     color: #822727;
 }
 
+.status-pill.on-leave {
+    background: #fef3c7;
+    color: #b8900e;
+}
+
 /* Table Action Icons */
 .table-action {
     white-space: nowrap;
@@ -219,6 +224,8 @@
 
 .edit-icon {
     color: #3182ce;
+    font-size: 18px;
+    border: none;
 }
 
 .delete-icon {

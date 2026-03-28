@@ -150,7 +150,7 @@ if (!function_exists('formatTime')) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrimeHealth Clinic</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="../assets/main.css">
@@ -236,12 +236,6 @@ if (!function_exists('formatTime')) {
                                 </td>
                             </tr>
                         </table>
-
-                        <div class="footer-container">
-                            <a href="user_dashboard.php" class="back-btn">
-                                <i class="bi bi-arrow-left"></i> Back to Dashboard
-                            </a>
-                        </div>
                     </div>
 
                     <div class="time-section">

@@ -29,9 +29,9 @@ $userInitial = strtoupper(substr(trim($userName), 0, 1));
     </button>
 
     <nav class="user-dashboard-header__nav" id="userDashboardHeaderNav">
-        <a href="../pages/user_dashboard.php">Dashboard</a>
-        <a href="../pages/user_profile.php">Profile</a>
-        <a href="../pages/user_appointment.php">Appointments</a>
+        <a href="../userpages/user_dashboard.php">Dashboard</a>
+        <a href="../userpages/user_profile.php">Profile</a>
+        <a href="../userpages/user_appointment.php">Appointments</a>
         <a href="#" id="userDashboardLogoutLink">Logout</a>
     </nav>
 </header>

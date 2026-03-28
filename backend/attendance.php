@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     if (isset($_POST['user_dashboard_redirect'])) {
-        $referer = '../pages/user_dashboard.php';
+        $referer = '../userpages/user_dashboard.php';
     } else {
         $referer = $_SERVER['HTTP_REFERER'] ?? '../pages/attendance_list.php';
     }

@@ -9,7 +9,7 @@ include '../backend/profile.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrimeHealth Clinic</title>
-    <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="../assets/main.css">
@@ -171,7 +171,7 @@ include '../backend/profile.php';
                             <tr>
                                 <td class="label">Status</td>
                                 <td class="value">
-                                    <span class="status-badge <?= ($emp['status'] == 'active') ? 'status-active' : 'status-inactive' ?>">
+                                    <span class="status-badge <?= ($emp['status'] == 'active') ? 'status-active' : (($emp['status'] == 'on leave') ? 'status-on-leave' : 'status-inactive') ?>">
                                         <?= ucfirst($emp['status']) ?>
                                     </span>
                                 </td>

@@ -2,7 +2,35 @@
 include '../auth/db_connect.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // Check if this is an update operation
+    if(isset($_POST['action']) && $_POST['action'] === 'update') {
+        $employee_id = $_POST['employee_id'];
+        $first_name = $_POST['first_name'];
+        $middle_name = $_POST['middle_name'] ?? '';
+        $last_name = $_POST['last_name'];
+        $position = $_POST['position'];
+        $position_type = $_POST['position_type'];
+        $email = $_POST['email'] ?? '';
+        $phone = $_POST['phone'] ?? '';
+        $hire_date = $_POST['hire_date'];
+        $status = $_POST['status'];
 
+        // Update employee in database
+        $stmt = $conn->prepare("UPDATE employees SET first_name = ?, middle_name = ?, last_name = ?, position = ?, position_type = ?, email = ?, phone = ?, hire_date = ?, status = ?, updated_at = NOW() WHERE id = ?");
+        $stmt->bind_param("sssssssssi", $first_name, $middle_name, $last_name, $position, $position_type, $email, $phone, $hire_date, $status, $employee_id);
+
+        if($stmt->execute()){
+            $_SESSION['success'] = "Employee updated successfully.";
+        } else {
+            $_SESSION['error'] = "Failed to update employee.";
+        }
+
+        header("Location: ../pages/employees.php");
+        exit;
+    }
+
+    // Add new employee
     $first_name = $_POST['first_name'];
     $middle_name = $_POST['middle_name'] ?? '';
     $last_name = $_POST['last_name'];
@@ -35,8 +63,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header("Location: ../pages/employees.php");
     exit;
-}
 
+}
+    
 // Delete employee
 if(isset($_GET['id'])){
     $id = $_GET['id'];

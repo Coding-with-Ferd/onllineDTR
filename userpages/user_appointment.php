@@ -8,36 +8,19 @@ if (!isLoggedIn()) {
     exit();
 }
 
-// Check for expired leaves and update employee status back to active
-$today = date('Y-m-d');
-$expired_leaves = $conn->query("
-    SELECT lr.employee_id
-    FROM leave_requests lr
-    WHERE lr.status = 'Approved'
-    AND lr.end_date < '$today'
-    AND EXISTS (
-        SELECT 1 FROM employees e
-        WHERE e.id = lr.employee_id
-        AND e.status = 'on leave'
-    )
-");
-
-while($leave = $expired_leaves->fetch_assoc()) {
-    $conn->query("UPDATE employees SET status = 'active', updated_at = NOW() WHERE id = " . $leave['employee_id']);
-}
-
-// Fetch all leave requests with employee details
+// Fetch user's leave requests
 $query = $conn->query("
-    SELECT lr.*, e.first_name, e.last_name, e.employee_code,
+    SELECT lr.*, e.first_name, e.last_name,
            approver.first_name as approver_first, approver.last_name as approver_last
     FROM leave_requests lr
     JOIN employees e ON lr.employee_id = e.id
     LEFT JOIN employees approver ON lr.approved_by = approver.id
+    WHERE lr.employee_id = {$_SESSION['user_id']}
     ORDER BY lr.created_at DESC
 ");
 $leave_requests = $query->fetch_all(MYSQLI_ASSOC);
 
-// Get leave statistics
+// Get user's leave statistics
 $stats = $conn->query("
     SELECT
         COUNT(*) as total_requests,
@@ -45,10 +28,8 @@ $stats = $conn->query("
         SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as approved,
         SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) as rejected
     FROM leave_requests
+    WHERE employee_id = {$_SESSION['user_id']}
 ")->fetch_assoc();
-
-// Get employees for dropdown
-$employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM employees WHERE status = 'active' ORDER BY last_name ASC");
 ?>
 
 <!DOCTYPE html>
@@ -57,30 +38,28 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeHealth Clinic - Leave Requests</title>
+    <title>PrimeHealth Clinic - My Leave Requests</title>
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="../assets/main.css">
-    <link rel="stylesheet" href="../assets/sidebar.css">
-    <link rel="stylesheet" href="../assets/header.css">
-    <link rel="stylesheet" href="../assets/appointment.css">
+    <link rel="stylesheet" href="../assets/user_dashboard_header.css">
+    <link rel="stylesheet" href="../assets/user_appointment.css">
 </head>
 
 <body>
     <div class="dashboard">
-        <?php include '../components/sidebar.php'; ?>
         <div class="main">
-            <?php include '../components/header.php'; ?>
+            <?php include '../components/user_dashboard_header.php'; ?>
 
             <div class="main-layer">
                 <div class="app-header">
                     <div class="header-text">
-                        <h1><i class="bi bi-calendar-x" style="color: #1a7318;"></i> Leave Requests</h1>
-                        <p>Manage employee leave requests and approvals.</p>
+                        <h1><i class="bi bi-calendar-x" style="color: #1a7318;"></i> My Leave Requests</h1>
+                        <p>View and manage your leave requests.</p>
                     </div>
                     <button class="btn-add-appointment" onclick="openModal()">
-                        <i class="bi bi-plus-lg"></i> New Leave Request
+                        <i class="bi bi-plus-lg"></i> Request Leave
                     </button>
                 </div>
 
@@ -107,7 +86,6 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                     <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>Employee</th>
                                 <th>Leave Type</th>
                                 <th>Duration</th>
                                 <th>Reason</th>
@@ -120,15 +98,6 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                             <?php if (count($leave_requests) > 0): ?>
                                 <?php foreach ($leave_requests as $leave): ?>
                                     <tr>
-                                        <td>
-                                            <div class="client-info">
-                                                <div class="name-circle"><?php echo strtoupper(substr($leave['first_name'], 0, 1) . substr($leave['last_name'], 0, 1)); ?></div>
-                                                <div>
-                                                    <strong><?php echo htmlspecialchars($leave['first_name'] . ' ' . $leave['last_name']); ?></strong>
-                                                    <small><?php echo htmlspecialchars($leave['employee_code']); ?></small>
-                                                </div>
-                                            </div>
-                                        </td>
                                         <td><span class="service-tag"><?php echo htmlspecialchars($leave['leave_type']); ?></span></td>
                                         <td>
                                             <div class="datetime">
@@ -153,22 +122,16 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                                         <td><?php echo date('M d, Y', strtotime($leave['created_at'])); ?></td>
                                         <td style="text-align:right;">
                                             <?php if($leave['status'] === 'Pending'): ?>
-                                                <a href="../backend/leave_request.php?action=approve&id=<?php echo $leave['id']; ?>" class="btn-icon approve" title="Approve" onclick="return confirm('Approve this leave request?')">
-                                                    <i class="bi bi-check-circle"></i>
-                                                </a>
-                                                <a href="../backend/leave_request.php?action=reject&id=<?php echo $leave['id']; ?>" class="btn-icon reject" title="Reject" onclick="return confirm('Reject this leave request?')">
+                                                <a href="../backend/leave_request.php?delete=<?php echo $leave['id']; ?>" class="btn-icon delete" title="Cancel Request" onclick="return confirm('Cancel this leave request?')">
                                                     <i class="bi bi-x-circle"></i>
                                                 </a>
                                             <?php endif; ?>
-                                            <a href="../backend/leave_request.php?delete=<?php echo $leave['id']; ?>" class="btn-icon delete" title="Delete" onclick="return confirm('Delete this leave request?')">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="7" class="empty-state">No leave requests found.</td>
+                                    <td colspan="6" class="empty-state">No leave requests found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -179,31 +142,9 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                 <div id="leaveModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>New Leave Request</h2>
+                        <h2>Request Leave</h2>
                         <form method="POST" action="../backend/leave_request.php">
-                            <div class="form-group">
-                                <label>Employee</label>
-                                <select name="employee_id" required>
-                                    <option value="">Select Employee</option>
-                                    <?php
-                                    $employees->data_seek(0); // Reset result pointer
-                                    while($emp = $employees->fetch_assoc()):
-                                    ?>
-                                        <option value="<?php echo $emp['id']; ?>">
-                                            <?php echo htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name'] . ' (' . $emp['employee_code'] . ')'); ?>
-                                            <?php
-                                            // Get current employee status
-                                            $status_query = $conn->query("SELECT status FROM employees WHERE id = " . $emp['id']);
-                                            $status_result = $status_query->fetch_assoc();
-                                            $current_status = $status_result['status'];
-                                            if($current_status === 'on leave') {
-                                                echo ' - ON LEAVE';
-                                            }
-                                            ?>
-                                        </option>
-                                    <?php endwhile; ?>
-                                </select>
-                            </div>
+                            <input type="hidden" name="employee_id" value="<?php echo $_SESSION['user_id']; ?>">
                             <div class="form-group">
                                 <label>Leave Type</label>
                                 <select name="leave_type" required>
@@ -228,7 +169,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                             </div>
                             <div class="form-group">
                                 <label>Reason</label>
-                                <textarea name="reason" rows="3" placeholder="Please provide a reason for your leave request..."></textarea>
+                                <textarea name="reason" rows="3" placeholder="Please provide a reason for your leave request..." required></textarea>
                             </div>
                             <div class="modal-actions">
                                 <button type="submit" class="btn-add-appointment">
@@ -242,7 +183,6 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
             </div>
         </div>
     </div>
-    <script src="../assets/js/sidebar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -269,8 +209,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
 
             const endPicker = flatpickr("#endDatePicker", {
                 altInput: true,
-                altFormat: "F j, Y",
-                dateFormat: "Y-m-d",
+                altFormat: "Y-m-d",
                 minDate: "today",
                 disableMobile: "true",
                 static: true,
@@ -314,6 +253,9 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
             });
         });
     </script>
+</body>
+
+</html>
 </body>
 
 </html>

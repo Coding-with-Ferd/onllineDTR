@@ -167,6 +167,11 @@ h2 {
     color: #9b1c1c;
 }
 
+.status-on-leave {
+    background: #fef3c7;
+    color: #92400e;
+}
+
 .btn-timein,
 .btn-timeout {
     padding: 8px 16px;
