@@ -335,21 +335,6 @@ h2 {
     object-fit: cover;
 }
 
-.upload-btn {
-    margin-top: 10px;
-    padding: 6px 12px;
-    background-color: #1a6d18;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.upload-btn:hover {
-    background-color: #145214;
-}
-
 .profile-top,
 .profile-photo-form,
 .photo-controls,

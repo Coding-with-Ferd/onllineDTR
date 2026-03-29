@@ -128,3 +128,48 @@ header .datetime {
     box-shadow:0 6px 20px rgba(0, 0, 0, 0.3);
     overflow:hidden;
 }
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a,
+.pagination span {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    text-decoration: none;
+    color: #334155;
+    font-size: 0.9rem;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+    background: #f0fdf4;
+    border-color: #1a7318;
+    color: #134e0d;
+}
+
+.pagination a.active {
+    background: #1a7318;
+    color: #ffffff;
+    border-color: #1a7318;
+}
+
+.pagination a.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.pagination span.ellipsis {
+    border-color: transparent;
+    background: transparent;
+    color: #64748b;
+    pointer-events: none;
+}

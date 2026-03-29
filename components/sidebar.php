@@ -43,12 +43,12 @@ $display_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest'
                 <a href="../pages/index.php"><i class="bi bi-house-door"></i> <span>Dashboard</span></a>
                 <a href="../pages/employees.php"><i class="bi bi-people"></i> <span>Employees</span></a>
                 <a href="../pages/attendance.php"><i class="bi bi-person-check-fill"></i> <span>Attendance</span></a>
-                <a href="../pages/appointment.php"><i class="bi bi-journal-plus"></i> <span>Appointment</span></a>
-                <a href="../pages/daily_status.php"><i class="bi bi-geo-alt-fill"></i> <span>Branch Status</span></a>
+                <a href="../pages/appointment.php"><i class="bi bi-calendar-x"></i> <span>Leave </span></a>
+                <a href="../pages/branch_status.php"><i class="bi bi-geo-alt-fill"></i> <span>Branch Status</span></a>
                 <a href="../pages/calendar.php"><i class="bi bi-calendar3"></i> <span>Calendar</span></a>
             <?php else: ?>
                 <a href="../pages/user_dashboard.php"><i class="bi bi-clock-history"></i> <span>My Daily Record</span></a>
-                <a href="../pages/appointment.php"><i class="bi bi-journal-plus"></i> <span>Appointments</span></a>
+                <a href="../pages/appointment.php"><i class="bi bi-calendar-x"></i> <span>Leave Requests</span></a>
             <?php endif; ?>
             
             <a href="#" id="logoutLink"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a>

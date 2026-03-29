@@ -205,9 +205,9 @@
     color: #991b1b;
 }
 
-.status-halfday {
-    background: #fef3c7;
-    color: #92400e;
+.status-onleave {
+    background: #fef9c3;
+    color: #94400f;
 }
 
 /* Print Mode Optimization */
@@ -376,8 +376,18 @@
 }
 
 /* Form Styling inside Modal */
-.modal-body select, .modal-body input {
+.modal-body select {
     width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.modal-body input {
+    width: 95%;
     padding: 10px;
     margin-top: 5px;
     margin-bottom: 15px;

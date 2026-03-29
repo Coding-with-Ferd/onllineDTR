@@ -79,6 +79,7 @@ if (!function_exists('formatTime')) {
                                 <th>Time Out</th>
                                 <th style="text-align:right;">Total Hrs</th>
                                 <th style="text-align:center;">Status</th>
+                                <th>Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,7 +95,15 @@ if (!function_exists('formatTime')) {
                                         $t_out = $record['time_out'] ?? null;
                                         $hrs = totalHours($t_in, $t_out);
                                         $stat = $record['status'] ?? 'Present';
-                                        $stat_class = (strtolower($stat) == 'present') ? 'status-present' : 'status-halfday';
+                                        $stat_lower = strtolower($stat);
+
+                                        if ($stat_lower === 'present') {
+                                            $stat_class = 'status-present';
+                                        } elseif ($stat_lower === 'absent') {
+                                            $stat_class = 'status-absent';
+                                        } else {
+                                            $stat_class = 'status-onleave';
+                                        }
                                     ?>
                                         <tr>
                                             <td>
@@ -114,6 +123,9 @@ if (!function_exists('formatTime')) {
                                             </td>
                                             <td style="text-align:center;">
                                                 <span class="status-badge <?= $stat_class ?>"><?= $stat ?></span>
+                                            </td>
+                                            <td class="remarks-col">
+                                                <?= !empty($record['remarks']) ? htmlspecialchars($record['remarks']) : '-' ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -156,8 +168,16 @@ if (!function_exists('formatTime')) {
                             <option value="Absent">Absent</option>
                             <option value="SNW Holiday">SNW Holiday</option>
                             <option value="Holiday">Holiday</option>
-                            <option value="Leave">Leave</option>
                         </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Remarks (Optional)</label>
+                        <input
+                            type="text"
+                            name="remarks"
+                            placeholder="Enter remarks (e.g. Late, Half-day, Off-site...)"
+                            style="text-transform: uppercase;">
                     </div>
 
                     <div class="action-buttons-modal">

@@ -95,7 +95,7 @@ if (!$emp) {
 }
 
 // Pagination & Date Filter Logic (Updated)
-$limit = 10; 
+$limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
@@ -129,7 +129,7 @@ $stmt_today = $conn->prepare("SELECT * FROM attendance WHERE employee_id = ? AND
 $stmt_today->bind_param("is", $id, $today);
 $stmt_today->execute();
 $attendance = $stmt_today->get_result()->fetch_assoc();
-
+ 
 // Check if Employee already has a user account generated
 $hasUserAccount = false;
 if (isset($emp['employee_code'])) {
@@ -144,8 +144,8 @@ if (isset($emp['employee_code'])) {
 
 // Helper to format time
 if (!function_exists('formatTime')) {
-    function formatTime($time) {
+    function formatTime($time)
+    {
         return $time ? date('h:i A', strtotime($time)) : '-';
     }
 }
-?>

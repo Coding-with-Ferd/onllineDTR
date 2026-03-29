@@ -7,9 +7,26 @@ if (!isLoggedIn()) {
     exit();
 }
 
-// Fetch all employees
-$query = $conn->query("SELECT * FROM employees ORDER BY last_name ASC");
+// Pagination setup
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 8;
+$offset = ($currentPage - 1) * $perPage;
+
+// Total employees count
+$totalQuery = $conn->query("SELECT COUNT(*) as total FROM employees");
+$totalEmployees = $totalQuery->fetch_assoc()['total'] ?? 0;
+
+// Fetch current page employees
+$query = $conn->query("SELECT * FROM employees ORDER BY last_name ASC LIMIT $perPage OFFSET $offset");
 $employees = $query->fetch_all(MYSQLI_ASSOC);
+
+$pagination = [
+    'current_page' => $currentPage,
+    'total_items' => $totalEmployees,
+    'per_page' => $perPage,
+    'base_url' => 'employees.php',
+    'query_params' => $_GET,
+];
 ?>
 
 <!DOCTYPE html>
@@ -108,6 +125,8 @@ $employees = $query->fetch_all(MYSQLI_ASSOC);
                             <?php endif; ?>
                         </tbody>
                     </table>
+
+                    <?php include '../components/pagination.php'; ?>
 
                 </div>
 

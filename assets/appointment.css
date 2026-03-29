@@ -34,6 +34,13 @@
     gap: 8px;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(26, 115, 24, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-add-appointment:hover {
+    background: #166534;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 115, 24, 0.3);
 }
 
 /* Stats Styling */
@@ -151,16 +158,6 @@
     text-transform: uppercase;
 }
 
-.badge-confirmed {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.badge-pending {
-    background: #fef3c7;
-    color: #92400e;
-}
-
 /* Action Buttons */
 .btn-icon {
     background: #f1f5f9;
@@ -260,7 +257,7 @@
     color: #1e293b;
 }
 
-.close {
+.modal-content .close {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -331,18 +328,6 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.btn-add-appointment {
-    background: #1a7318;
-    color: white;
-    border: none;
-}
-
-.btn-add-appointment:hover {
-    background: #166534;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(26, 115, 24, 0.3);
 }
 
 .close-btn {

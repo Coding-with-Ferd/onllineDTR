@@ -1,0 +1,206 @@
+body {
+    margin: 0;
+    background: #f8fafc;
+    font-family: Arial, sans-serif;
+    color: #000;
+}
+
+.preview-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.btn-back-preview,
+.btn-print-preview {
+    text-decoration: none;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-back-preview {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-print-preview {
+    background: #1f2937;
+    color: #fff;
+}
+
+.print-dtr-wrap {
+    background: #fff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dtr-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.dtr-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.dtr-title-wrap h1 {
+    margin: 0;
+    font-size: 34px;
+    color: #0c7a43;
+    font-weight: 800;
+}
+
+.dtr-title-wrap p {
+    margin: 0;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.dtr-meta,
+.dtr-sheet {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+
+.dtr-meta td,
+.dtr-sheet th,
+.dtr-sheet td {
+    border: 1px solid #000;
+    padding: 6px;
+    font-size: 12px;
+}
+
+.dtr-meta td:first-child {
+    width: 180px;
+    font-weight: 700;
+}
+
+.dtr-sheet th {
+    background: #ead58d;
+    text-align: center;
+    font-weight: 700;
+}
+
+.dtr-sheet td {
+    text-align: center;
+}
+
+.print-input,
+.print-cell-input,
+.print-signature-input,
+.print-note {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font: inherit;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.print-input {
+    text-transform: uppercase;
+}
+
+.print-note {
+    min-height: 60px;
+    resize: none;
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 700;
+}
+
+.print-signature-input {
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.print-hours-input {
+    max-width: 80px;
+}
+
+.dtr-certify {
+    text-align: center;
+    margin: 20px 0 30px;
+}
+
+.dtr-signatures {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.sig-box {
+    width: 45%;
+    text-align: center;
+}
+
+.sig-line {
+    border-top: 1px solid #000;
+    height: 20px;
+    margin-bottom: 8px;
+}
+
+@media print {
+    body {
+        background: #fff;
+    }
+
+    .no-print,
+    .preview-actions {
+        display: none !important;
+    }
+
+    .preview-page {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .print-dtr-wrap {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    .print-input,
+    .print-cell-input,
+    .print-signature-input,
+    .print-note {
+        border: none;
+        background: transparent;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+}

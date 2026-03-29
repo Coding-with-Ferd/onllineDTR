@@ -77,6 +77,7 @@
     background: #fff;
     border-radius: 24px;
     padding: 25px;
+    padding-right: 10px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02);
 }
@@ -166,4 +167,74 @@
 
 .dot-absent {
     background: #ef4444;
+}
+
+.calendar-scroll {
+    max-height: 680px;
+    overflow-y: auto;
+    padding-right: 20px;
+}
+
+.calendar-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.calendar-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.calendar-cell.is-holiday {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.holiday-label {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.68rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #b91c1c;
+    word-break: break-word;
+}
+
+.holiday-type {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.dot-holiday {
+    background: #ef4444;
+}
+
+.calendar-api-note {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.calendar-warning {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fdba74;
+    font-size: 0.9rem;
 }

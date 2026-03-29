@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2026 at 12:44 PM
+-- Generation Time: Mar 29, 2026 at 06:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,6 +33,7 @@ CREATE TABLE `attendance` (
   `attendance_date` date NOT NULL,
   `time_in` time DEFAULT NULL,
   `time_out` time DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
   `status` varchar(50) DEFAULT 'Absent',
   `total_hours` decimal(5,2) DEFAULT 0.00,
   `created_at` datetime DEFAULT current_timestamp(),
@@ -43,11 +44,42 @@ CREATE TABLE `attendance` (
 -- Dumping data for table `attendance`
 --
 
-INSERT INTO `attendance` (`id`, `employee_id`, `attendance_date`, `time_in`, `time_out`, `status`, `total_hours`, `created_at`, `updated_at`) VALUES
-(12, 4, '2026-03-18', '11:22:40', NULL, 'Present', 0.00, '2026-03-18 11:22:40', '2026-03-18 11:22:40'),
-(13, 4, '2026-03-25', '11:35:57', '17:55:04', 'Present', 0.00, '2026-03-25 11:35:57', '2026-03-25 17:55:04'),
-(14, 8, '2026-03-25', NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
-(15, 8, '2026-03-26', NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45');
+INSERT INTO `attendance` (`id`, `employee_id`, `attendance_date`, `time_in`, `time_out`, `remarks`, `status`, `total_hours`, `created_at`, `updated_at`) VALUES
+(12, 4, '2026-03-18', '11:22:40', NULL, NULL, 'Present', 0.00, '2026-03-18 11:22:40', '2026-03-18 11:22:40'),
+(13, 4, '2026-03-25', '11:35:57', '17:55:04', NULL, 'Present', 0.00, '2026-03-25 11:35:57', '2026-03-25 17:55:04'),
+(14, 8, '2026-03-25', NULL, NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
+(15, 8, '2026-03-26', NULL, NULL, NULL, 'on leave', 0.00, '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
+(16, 8, '2026-03-28', NULL, NULL, NULL, 'Absent', 0.00, '2026-03-28 22:12:42', '2026-03-28 22:12:42'),
+(17, 4, '2026-03-28', '22:14:24', NULL, NULL, 'Present', 0.00, '2026-03-28 22:14:24', '2026-03-28 22:14:24'),
+(18, 4, '2026-03-29', NULL, NULL, NULL, 'Absent', 0.00, '2026-03-29 17:33:56', '2026-03-29 22:03:15'),
+(19, 4, '2026-03-30', NULL, NULL, NULL, 'on leave', 0.00, '2026-03-29 18:05:21', '2026-03-29 18:05:21'),
+(20, 4, '2026-03-31', NULL, NULL, NULL, 'on leave', 0.00, '2026-03-29 18:05:21', '2026-03-29 18:05:21'),
+(21, 8, '2026-03-29', '18:44:48', '23:27:36', 'OFF-SITE', 'Present', 0.00, '2026-03-29 18:44:48', '2026-03-29 23:27:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `branches`
+--
+
+CREATE TABLE `branches` (
+  `id` int(11) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `open_time` time DEFAULT '09:00:00',
+  `close_time` time DEFAULT '18:00:00',
+  `is_open` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `branches`
+--
+
+INSERT INTO `branches` (`id`, `branch_name`, `address`, `open_time`, `close_time`, `is_open`, `created_at`, `updated_at`) VALUES
+(1, 'Camarin Branch', 'Camarin Caloocan City', '09:00:00', '18:00:00', 1, '2026-03-29 11:16:13', '2026-03-29 11:16:13'),
+(2, 'Brixton Branch', 'Brixton Caloocan City', '09:00:00', '18:00:00', 0, '2026-03-29 11:19:48', '2026-03-29 11:44:24');
 
 -- --------------------------------------------------------
 
@@ -70,7 +102,9 @@ CREATE TABLE `daily_status` (
 
 INSERT INTO `daily_status` (`id`, `employee_id`, `status_date`, `status`, `created_at`, `updated_at`) VALUES
 (1, 8, '2026-03-25', 'on leave', '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
-(2, 8, '2026-03-26', 'on leave', '2026-03-25 14:57:45', '2026-03-25 14:57:45');
+(2, 8, '2026-03-26', 'on leave', '2026-03-25 14:57:45', '2026-03-25 14:57:45'),
+(3, 4, '2026-03-30', 'on leave', '2026-03-29 18:05:21', '2026-03-29 18:05:21'),
+(4, 4, '2026-03-31', 'on leave', '2026-03-29 18:05:21', '2026-03-29 18:05:21');
 
 -- --------------------------------------------------------
 
@@ -92,16 +126,17 @@ CREATE TABLE `employees` (
   `hire_date` date DEFAULT NULL,
   `status` enum('active','inactive','on leave') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `branch_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `last_name`, `middle_name`, `position`, `position_type`, `email`, `photo`, `phone`, `hire_date`, `status`, `created_at`, `updated_at`) VALUES
-(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', 'assets/uploads/employee_4_1774409436.jpg', '09636444567', '2026-01-13', 'on leave', '2026-03-08 15:09:28', '2026-03-25 06:12:38'),
-(8, '70010102', 'stephannie ', 'dacula', 'compania', 'it staff', 'Employee', 'stephannniedacula16@gmail.com', 'assets/uploads/employee_8_1774432682.jpg', '09071438582', NULL, 'on leave', '2026-03-25 06:56:39', '2026-03-25 09:58:02');
+INSERT INTO `employees` (`id`, `employee_code`, `first_name`, `last_name`, `middle_name`, `position`, `position_type`, `email`, `photo`, `phone`, `hire_date`, `status`, `created_at`, `updated_at`, `branch_id`) VALUES
+(4, '26011301', 'Ferdinand', 'Tanilon', 'Rejuso', 'IT Staff', 'Intern', 'ferdinandtanilon01@gmail.com', 'assets/uploads/employee_4_1774409436.jpg', '09636444567', '2026-01-13', 'active', '2026-03-08 15:09:28', '2026-03-29 13:51:30', 1),
+(8, '70010102', 'stephannie ', 'dacula', 'compania', 'it staff', 'Employee', 'stephannniedacula16@gmail.com', 'assets/uploads/employee_8_1774432682.jpg', '09071438582', NULL, 'active', '2026-03-25 06:56:39', '2026-03-29 13:51:34', 1);
 
 -- --------------------------------------------------------
 
@@ -129,7 +164,10 @@ CREATE TABLE `leave_requests` (
 
 INSERT INTO `leave_requests` (`id`, `employee_id`, `leave_type`, `start_date`, `end_date`, `reason`, `status`, `approved_by`, `approved_at`, `created_at`, `updated_at`) VALUES
 (2, 4, 'Vacation', '2026-03-25', '2026-03-27', 'Vacation Leave', 'Approved', NULL, '2026-03-25 14:12:38', '2026-03-25 06:12:21', '2026-03-25 06:12:38'),
-(3, 8, 'Sick', '2026-03-25', '2026-03-26', 'Sick Leave', 'Approved', NULL, '2026-03-25 14:57:45', '2026-03-25 06:57:38', '2026-03-25 06:57:45');
+(3, 8, 'Sick', '2026-03-25', '2026-03-26', 'Sick Leave', 'Approved', NULL, '2026-03-25 14:57:45', '2026-03-25 06:57:38', '2026-03-25 06:57:45'),
+(4, 4, 'Sick', '2026-03-28', '2026-03-30', 'I don\'t feel good today', 'Rejected', NULL, '2026-03-29 18:04:41', '2026-03-28 14:33:02', '2026-03-29 10:04:41'),
+(5, 4, 'Vacation', '2026-03-30', '2026-03-31', 'Vacation', 'Approved', NULL, '2026-03-29 18:05:21', '2026-03-29 10:05:17', '2026-03-29 10:05:21'),
+(6, 8, 'Emergency', '2026-03-29', '2026-03-31', 'Emergency', 'Pending', NULL, NULL, '2026-03-29 12:38:33', '2026-03-29 12:38:33');
 
 -- --------------------------------------------------------
 
@@ -168,6 +206,12 @@ ALTER TABLE `attendance`
   ADD KEY `employee_id` (`employee_id`);
 
 --
+-- Indexes for table `branches`
+--
+ALTER TABLE `branches`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `daily_status`
 --
 ALTER TABLE `daily_status`
@@ -179,7 +223,8 @@ ALTER TABLE `daily_status`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `employee_code` (`employee_code`);
+  ADD UNIQUE KEY `employee_code` (`employee_code`),
+  ADD KEY `fk_employees_branch` (`branch_id`);
 
 --
 -- Indexes for table `leave_requests`
@@ -203,13 +248,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `branches`
+--
+ALTER TABLE `branches`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `daily_status`
 --
 ALTER TABLE `daily_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `employees`
@@ -221,7 +272,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT for table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -244,6 +295,12 @@ ALTER TABLE `attendance`
 --
 ALTER TABLE `daily_status`
   ADD CONSTRAINT `daily_status_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `fk_employees_branch` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `leave_requests`

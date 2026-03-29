@@ -11,14 +11,10 @@ include '../backend/profile.php';
     <title>PrimeHealth Clinic</title>
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="../assets/sidebar.css">
     <link rel="stylesheet" href="../assets/header.css">
     <link rel="stylesheet" href="../assets/profile.css">
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -38,14 +34,16 @@ include '../backend/profile.php';
                         <?php unset($_SESSION['notif']); ?>
                     <?php endif; ?>
 
-                    <div class="print-only-header">
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <h1 style="margin: 0; font-size: 24px;">PRIMEHEALTH CLINIC</h1>
-                            <h2 style="margin: 0; font-size: 18px; text-transform: uppercase;">Daily Time Record</h2>
-                            <p style="margin: 5px 0; font-size: 14px;">Employee Name: <strong><?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?></strong></p>
-                            <p style="margin: 0; font-size: 12px;">ID Code: <?= htmlspecialchars($emp['employee_code']) ?> | Position: <?= htmlspecialchars($emp['position']) ?></p>
-                        </div>
-                    </div>
+                    <?php
+                    $attendanceRows = [];
+
+                    if ($attendance_history && $attendance_history->num_rows > 0) {
+                        mysqli_data_seek($attendance_history, 0);
+                        while ($row = $attendance_history->fetch_assoc()) {
+                            $attendanceRows[] = $row;
+                        }
+                    }
+                    ?>
 
                     <div class="time-section">
                         <div class="table-header-actions">
@@ -68,12 +66,15 @@ include '../backend/profile.php';
                                     <button type="submit" class="btn-timein" style="padding: 7px 15px; height: 35px;">Filter</button>
 
                                     <?php if (isset($_GET['start_date'])): ?>
-                                        <a href="profile.php?id=<?= $id ?>" style="font-size: 17px; height: 25px align-self: center; background: #dc3545; color: white; padding: 7px 15px; border-radius: 4px; text-decoration: none;">Clear</a>
+                                        <a href="profile.php?id=<?= $id ?>" style="font-size: 17px; background: #dc3545; color: white; padding: 7px 15px; border-radius: 4px; text-decoration: none;">Clear</a>
                                     <?php endif; ?>
                                 </form>
 
-
-                                <a href="javascript:window.print()" class="btn-print" style="height: 45px; display: flex; align-items: center;"><i class="bi bi-printer"></i></a>
+                                <a href="../components/print_preview.php?id=<?= $id ?>&start_date=<?= urlencode($_GET['start_date'] ?? '') ?>&end_date=<?= urlencode($_GET['end_date'] ?? '') ?>"
+                                   class="btn-print"
+                                   style="height: 45px; display: flex; align-items: center;">
+                                    <i class="bi bi-printer"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -87,15 +88,31 @@ include '../backend/profile.php';
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($attendance_history->num_rows > 0): ?>
-                                    <?php while ($row = $attendance_history->fetch_assoc()): ?>
+                                <?php if (!empty($attendanceRows)): ?>
+                                    <?php foreach ($attendanceRows as $row): ?>
                                         <tr>
                                             <td><strong><?= date('M d, Y', strtotime($row['attendance_date'])) ?></strong></td>
                                             <td><?= formatTime($row['time_in']) ?></td>
                                             <td><?= formatTime($row['time_out']) ?></td>
-                                            <td><span class="status-badge status-active">Present</span></td>
+                                            <td>
+                                                <?php
+                                                $status = $row['status'] ?? 'Present';
+
+                                                $statusClass = 'status-active';
+                                                if ($status === 'Present') {
+                                                    $statusClass = 'status-active';
+                                                } elseif ($status === 'Absent') {
+                                                    $statusClass = 'status-inactive';
+                                                } else {
+                                                    $statusClass = 'status-onleave';
+                                                }
+                                                ?>
+                                                <span class="status-badge <?= $statusClass ?>">
+                                                    <?= htmlspecialchars($status) ?>
+                                                </span>
+                                            </td>
                                         </tr>
-                                    <?php endwhile; ?>
+                                    <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
                                         <td colspan="4" style="text-align:center; padding: 20px;">No records found for this range.</td>
@@ -106,7 +123,6 @@ include '../backend/profile.php';
 
                         <div class="pagination">
                             <?php
-                            // Build query string for pagination links so filter stays active
                             $query_str = "&start_date=" . ($_GET['start_date'] ?? '') . "&end_date=" . ($_GET['end_date'] ?? '');
                             ?>
 
@@ -114,7 +130,7 @@ include '../backend/profile.php';
                                 <a href="?id=<?= $id ?>&page=<?= $page - 1 ?><?= $query_str ?>">Prev</a>
                             <?php endif; ?>
 
-                            <?php for ($i = 1; $i <= min($total_pages, 15); $i++): ?>
+                            <?php for ($i = 1; $i <= min($total_pages, 8); $i++): ?>
                                 <a href="?id=<?= $id ?>&page=<?= $i ?><?= $query_str ?>" class="<?= ($i == $page) ? 'active' : '' ?>"><?= $i ?></a>
                             <?php endfor; ?>
 
@@ -134,7 +150,7 @@ include '../backend/profile.php';
                                     <?php if (!empty($emp['photo'])): ?>
                                         <img src="../<?= htmlspecialchars($emp['photo']) ?>" alt="Profile photo">
                                     <?php else: ?>
-                                        <span><?= htmlspecialchars(substr($emp['first_name'],0,1) . substr($emp['last_name'],0,1)) ?></span>
+                                        <span><?= htmlspecialchars(substr($emp['first_name'], 0, 1) . substr($emp['last_name'], 0, 1)) ?></span>
                                     <?php endif; ?>
                                 </button>
                             </form>
@@ -148,9 +164,7 @@ include '../backend/profile.php';
                             </tr>
                             <tr>
                                 <td class="label">Fullname</td>
-                                <td class="value">
-                                    <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
-                                </td>
+                                <td class="value"><?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?></td>
                             </tr>
                             <tr>
                                 <td class="label">Position</td>
@@ -183,10 +197,7 @@ include '../backend/profile.php';
                                 <i class="bi bi-arrow-left"></i> Back to Employee List
                             </a>
 
-                            <?php 
-                            // Only Admins can generate accounts
-                            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): 
-                            ?>
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
                                 <form action="../backend/generate_account.php" method="POST" style="margin: 0;">
                                     <input type="hidden" name="employee_id" value="<?= $id ?>">
                                     <?php if ($hasUserAccount): ?>
@@ -228,5 +239,4 @@ include '../backend/profile.php';
         }
     </script>
 </body>
-
 </html>
