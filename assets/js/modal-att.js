@@ -51,3 +51,9 @@ function toggleModal(show) {
         updateAttendanceUI();
     }
 }
+
+function openPrintPreview() {
+    const url = "../components/print_attendance.php?id=<?= $id ?>&start_date=<?= urlencode($_GET['start_date'] ?? '') ?>&end_date=<?= urlencode($_GET['end_date'] ?? '') ?>";
+
+    window.location.href = url;
+}

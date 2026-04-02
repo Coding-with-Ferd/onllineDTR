@@ -60,7 +60,7 @@ if (!function_exists('formatTime')) {
                         <button class="btn-excel" onclick="window.location.href='../backend/download_attendance.php?from=<?= $from_date ?>&to=<?= $to_date ?>'">
                             <i class="bi bi-file-earmark-spreadsheet"></i> Export
                         </button>
-                        <button class="btn-print-dark" onclick="window.print()">
+                        <button onclick="openPrintPreview()" class="btn-print-dark">
                             <i class="bi bi-printer"></i> Print
                         </button>
                         <button class="btn-add-attendance" onclick="toggleModal(true)">
