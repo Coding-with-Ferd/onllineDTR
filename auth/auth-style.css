@@ -1,387 +1,466 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Montserrat:wght@300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Montserrat:wght@300..900&family=Bodoni+Moda:wght@700;800;900&display=swap');
 
-.input-group input:-webkit-autofill,
-.input-group input:-webkit-autofill:hover, 
-.input-group input:-webkit-autofill:focus,
-.input-group input:-webkit-autofill:active {
+:root {
+    --primary: #1f7a3e;
+    --primary-dark: #14532d;
+    --accent: #e6c04f;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: rgba(255, 255, 255, 0.18);
+    --card-bg: rgba(255, 255, 255, 0.78);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+    --radius: 24px;
+}
 
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+* {
+    box-sizing: border-box;
+}
 
-    -webkit-text-fill-color: #333 !important;
-    transition: background-color 5000s ease-in-out 0s;
-    background-clip: content-box !important;
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(53, 241, 92, 0.14), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(31, 122, 62, 0.10), transparent 35%),
+        linear-gradient(135deg, #f7fbf8 0%, #eef7f0 45%, #ffffff 100%);
+    color: var(--text);
 }
 
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: white;
+    min-height: 100vh;
+}
+
+/* Autofill fix */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #111827 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Background decoration */
+.login-scene {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 6vw 110px;
     overflow: hidden;
 }
 
-/* MAIN SCENE */
-.login-scene {
-    display: flex;
-    height: 100vh;
+.top {
+    position: absolute;
+    inset: 0 0 auto 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.12;
+}
+
+.top svg {
     width: 100%;
+    height: auto;
+    display: block;
 }
 
-.login-scene .top svg {
-    margin-bottom: 500px;
-    position: absolute;
-}
-
-.login-scene .bottom svg {
-    margin-top: 500px;
-    position: absolute;
-}
-
-/* LEFT PANEL */
+/* Left side */
 .left-panel {
-    flex: 1; 
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 30px;
 }
 
-/* RIGHT PANEL */
-.login-panel {
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;     
-    position: relative;
-}
-
-/* LOGO  */
 .image-collage {
-    position: absolute;
-    top: 35%; 
-    left: 50%;
-    width: 500px;
-    height: 500px;
+    width: min(100%, 460px);
+    aspect-ratio: 1 / 1;
     background: url("../assets/images/login.png") center/contain no-repeat;
-    transform: translate(-50%, -50%);
-    animation: logoToLeft 1.6s ease forwards;
-    animation-delay: 0.5s;
+    filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.12));
+    animation: floatIn 0.9s ease;
 }
 
-/* CLINIC TEXT */
 .clinic-text {
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     text-align: center;
-    color: #226142;
-    animation: textToLeft 1.6s ease forwards;
-    animation-delay: 0.5s;
+    max-width: 620px;
 }
 
 .clinic-text h1 {
+    margin: 0;
     font-family: 'Bodoni Moda', serif;
-    font-weight: 900; 
-    font-style: bold;
-    font-size: 45px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: 1px;
+    color: #1e4f35;
 }
 
 .clinic-text p {
-    margin-top: -40px;
-    opacity: 0.9;
+    margin: 12px 0 0;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
     font-style: italic;
-    font-size: 30px;
-    font-weight: bold;
+    font-weight: 600;
+    color: #3e6b55;
 }
 
-/* LOGIN FORM POSITION */
+/* Right side */
 .login-panel {
-    position: absolute;
-    left: 75%; 
-    top: 35%;
-    transform: translate(-50%, -50%); 
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* LOGIN FORM */
-.login-form {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 3%;
+    position: relative;
+    z-index: 2;
     width: 100%;
-    padding: 35px;
+    max-width: 460px;
+    margin-inline: auto;
+}
+
+.auth-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 28px;
+    animation: slideUp 0.7s ease;
+}
+
+.yakap-text {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.yakap-text h1 {
+    margin: 0;
+    color: #2cb457;
+    font-size: clamp(2rem, 3vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.yakap-text h2 {
+    margin: 4px 0 0;
+    color: var(--accent);
+    font-family: 'Fredoka', cursive;
+    font-size: clamp(2.3rem, 4vw, 4rem);
+    line-height: 1;
+    letter-spacing: 2px;
+}
+
+/* Forms */
+#login-section,
+#forgot-section,
+#reset-section,
+#otp-section {
+    width: 100%;
+}
+
+.login-form,
+.otp-form {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    box-shadow: 2px 2px 10px #444;
-    background: transparent;
-    opacity: 0;
-    transform: translateX(50px); 
-    animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; 
+    gap: 16px;
 }
 
-.login-form .error {
-    color: red;
-    font-size: 14px;
-    margin: 0;
+.login-form h2,
+.otp-form h2 {
+    margin: 0 0 6px;
+    text-align: center;
+    font-size: 1.3rem;
+    color: #1f2937;
 }
 
-.login-form .success {
-    color: green;
-    font-size: 14px;
+.login-form .error,
+.otp-form .error {
     margin: 0;
+    font-size: 0.92rem;
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.14);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.login-form .success,
+.otp-form .success {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #15803d;
+    background: rgba(21, 128, 61, 0.08);
+    border: 1px solid rgba(21, 128, 61, 0.14);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    height: 56px;
+    border: 1px solid rgba(31, 41, 55, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 0 18px 0 52px;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    transition: 0.25s ease;
+}
+
+.input-group input::placeholder {
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.input-group input:focus {
+    border-color: rgba(31, 122, 62, 0.55);
+    box-shadow: 0 0 0 4px rgba(31, 122, 62, 0.10);
+    background: #fff;
+}
+
+.input-group i {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #6b7280;
+}
+
+/* Options */
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: -4px;
+}
+
+.forgot-pw,
+.center-text a,
+#resend-container a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.forgot-pw:hover,
+.center-text a:hover,
+#resend-container a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 .center-text {
     text-align: center;
-    margin-top: 10px;
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 4px 0 0;
 }
 
-/* INPUT GROUPS */
-.input-group {
-    position: relative;
-    border-bottom: 2px solid #333;
-}
-
-.input-group input {
-    width: 90%;
-    margin-left: 10%;
-    padding: 12px 0;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 18px;
-    font-weight: 700;
-    color: #333;
-}
-
-
-.input-group i {
-    position: absolute;
-    left: 0;
-    top: 45%;
-    transform: translateY(-50%);
-    color: #333;
-    font-size: 20px;
-}
-
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 500;
-    color: #444;
-}
-
-.remember-me {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.remember-me input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.forgot-pw {
-    text-decoration: none;
-    color: #444;
-}
-
-/* THE GRADIENT BUTTON */
-.login-form button {
-    margin-top: 10px;
-    padding: 15px;
-    background: linear-gradient(to right, #536456 0%, #0a5318 50%, #536456 100%);
-    border: none;
-    color: white;
-    font-size: 20px;
-    font-weight: 900;
-    border-radius: 3%;  
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-
-.login-form button:hover {
-    opacity: 0.8;
-}
-
-.yakap-text {
-    position: absolute;
-    left: 8%; 
-    padding-bottom: 85%;
-    transform: translateX(50px); 
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; 
-    opacity: 0;
-}
-
-/* "PhilHealth" Text */
-.yakap-text h1 {
-    color: #47c460;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 800;
-    font-size: 80px;
-    margin: 0;
-    letter-spacing: -2px;
-    text-shadow: 0 0 10px rgba(224, 216, 202, 0.4);
-}
-
-/* "YAKAP" Text */
-.yakap-text h2 {
-    color: #e6c04f;
-    font-family: 'Fredoka', 'Fredoka One', cursive;
-    font-weight: 700;
-    font-size: 100px;
-    margin-top: -30px;
-    text-transform: uppercase;
-    text-shadow: 0 0 10px rgba(14, 11, 5, 0.4);
-
-    letter-spacing: 2px;
-    display: block;
-    transform: scaleX(1.3);
-}
-
-/* OTP FORM */
-.otp-form {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 35px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    background: transparent;
-    opacity: 0;
-    transform: translateX(50px);
-    animation: formAppear 1s ease forwards;
-    animation-delay: 1.2s; 
-}
-
-.otp-form .error {
-    color: red;
-    font-size: 14px;
-    margin: 0;
-}
-
-.otp-form .success {
-    color: green;
-    font-size: 14px;
-    margin: 0;
-}
-
-/* INPUT */
-.otp-form input {
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-/* BUTTON */
+/* Buttons */
+.login-form button,
 .otp-form button {
-    margin-top: 10px;
-    padding: 15px;
-    background: linear-gradient(to right, #000000 0%, #000000 40%, #666666 100%);
+    height: 56px;
     border: none;
-    color: white;
-    font-size: 20px;
-    font-weight: 900;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--primary) 0%, #2fa45b 100%);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    box-shadow: 0 12px 25px rgba(31, 122, 62, 0.24);
 }
 
+.login-form button:hover,
 .otp-form button:hover {
-    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(31, 122, 62, 0.28);
 }
 
+.login-form button:active,
+.otp-form button:active {
+    transform: translateY(0);
+}
+
+/* OTP */
 .timer-container {
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    margin: 20px;
+    margin-top: 8px;
 }
 
 #countdown {
-    font-family: 'Paytone One', 'Fredoka', sans-serif;
-    font-size: 40px;
-    color: #e6bf4b;
-    text-shadow: 0 0 10px rgba(230, 191, 75, 0.3);
-    margin: 0;
+    display: inline-block;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2rem;
+    color: var(--accent);
+    font-weight: 700;
     line-height: 1;
 }
 
+#timer-status p,
 .timer-container p {
-    color: #49bd60;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 5px;
+    margin: 6px 0 0;
+    color: #4b5563;
+    font-size: 0.95rem;
 }
 
-/* FOOTER STYLING */
+/* Footer */
 .auth-footer {
     position: fixed;
-    bottom: -13px;
-    left: 90%;
-    transform: translateX(-50%);
-    width: 180%;
-    z-index: 100;
-    background: #1e8a34;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 6px 12px; 
+    background: linear-gradient(
+        180deg,
+        #166534 0%,
+        #1f7a3e 55%,
+        #2fa45b 100%
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .auth-footer img {
-    margin-left: 48%;
-    height: 80px;
+    max-height: 60px; 
     width: auto;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    display: block;
 }
 
-@keyframes fadeInFooter {
-    to {
-        opacity: 0.8;
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
     }
-}
-
-@media (max-height: 600px) {
-    .auth-footer {
-        display: none;
-    }
-}
-
-/* FORM ANIMATION */
-@keyframes formAppear {
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
 
-
-@keyframes logoToLeft {
-    0% { left: 50%; transform: translate(-50%, -50%); }
-    100% { left: 25%; transform: translate(-50%, -50%); }
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
-@keyframes textToLeft {
-    0% { left: 50%; transform: translate(-50%, -50%); }
-    100% { left: 25%; transform: translate(-50%, -50%); }
+/* Tablet */
+@media (max-width: 1024px) {
+    .login-scene {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 30px 20px 110px;
+    }
+
+    .left-panel {
+        padding: 10px 10px 0;
+    }
+
+    .image-collage {
+        width: min(72vw, 340px);
+    }
+
+    .clinic-text h1 {
+        font-size: clamp(1.9rem, 5vw, 3rem);
+    }
+
+    .clinic-text p {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+
+    .login-panel {
+        max-width: 520px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .login-scene {
+        padding: 20px 14px 95px;
+    }
+
+    .left-panel {
+        gap: 14px;
+    }
+
+    .image-collage {
+        width: min(78vw, 260px);
+    }
+
+    .clinic-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .clinic-text p {
+        margin-top: 8px;
+        font-size: 1rem;
+    }
+
+    .auth-card {
+        padding: 24px 18px;
+        border-radius: 20px;
+    }
+
+    .yakap-text {
+        margin-bottom: 18px;
+    }
+
+    .yakap-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .yakap-text h2 {
+        font-size: 2.6rem;
+    }
+
+    .input-group input,
+    .login-form button,
+    .otp-form button {
+        height: 52px;
+        font-size: 0.96rem;
+    }
+
+    .auth-footer {
+        padding: 8px 12px;
+    }
+
+    .auth-footer img {
+        max-width: 320px;
+    }
+}
+
+/* Very small devices */
+@media (max-width: 380px) {
+    .clinic-text h1 {
+        font-size: 1.55rem;
+    }
+
+    .yakap-text h2 {
+        font-size: 2.2rem;
+    }
+
+    .auth-card {
+        padding: 20px 14px;
+    }
 }

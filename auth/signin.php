@@ -31,99 +31,101 @@
         </div>
 
         <div class="login-panel">
-            <div class="yakap-text">
-                <h1>PhilHealth</h1>
-                <h2>YAKAP</h2>
-            </div>
-            <div id="login-section">
-                <form class="login-form" id="login-form">
-                    <p class="error" id="login-error" style="color:red; display:none;"></p>
-                    <div class="input-group">
-                        <input type="text" name="email" placeholder="Email or Employee Code" required>
-                        <i class="bi bi-envelope"></i>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" name="password" placeholder="Password" required>
-                        <i class="bi bi-lock"></i>
-                    </div>
-                    <div class="form-options">
-                        <label class="remember-me">
-                        </label>
-                        <a href="#" class="forgot-pw" onclick="showForgot()">Forgot Password?</a>
-                    </div>
-                    <button type="submit">Login</button>
-                    <p class="center-text">Don't have an account? <a href="signup.php">Sign up</a></p>
-                </form>
-            </div>
+            <div class="auth-card">
+                <div class="yakap-text">
+                    <h1>PhilHealth</h1>
+                    <h2>YAKAP</h2>
+                </div>
 
-            <div id="forgot-section" style="display:none;">
-                <form class="login-form" id="forgot-form">
-                    <h2><i class="bi bi-envelope"></i> Forgot Password</h2>
+                <div id="login-section">
+                    <form class="login-form" id="login-form">
+                        <p class="error" id="login-error" style="display:none;"></p>
 
-                    <p class="error" id="forgot-error" style="color:red; display:none;"></p>
-
-                    <div class="input-group">
-                        <input type="email" name="email" placeholder="Enter your registered email" required>
-                        <i class="bi bi-envelope"></i>
-                    </div>
-
-                    <button type="submit">Send OTP</button>
-
-                    <p class="center-text">
-                        Remembered your password?
-                        <a href="#" onclick="showLogin()">Back to Login</a>
-                    </p>
-                </form>
-            </div>
-
-            <div id="reset-section" style="display:none;">
-                <form class="login-form" id="reset-form">
-
-                    <h2><i class="bi bi-shield-lock"></i> Reset Password</h2>
-
-                    <p class="error" id="reset-error" style="color:red; display:none;"></p>
-
-                    <div class="input-group">
-                        <input type="text" name="otp" placeholder="Enter OTP" required>
-                        <i class="bi bi-key"></i>
-                    </div>
-
-                    <div class="input-group">
-                        <input type="password" name="password" placeholder="New Password" required>
-                        <i class="bi bi-lock"></i>
-                    </div>
-
-                    <button type="submit">Reset Password</button>
-
-                    <p class="center-text">
-                        <a href="#" onclick="showLogin()">Back to Login</a>
-                    </p>
-
-                </form>
-            </div>
-
-            <div id="otp-section" style="display:none;">
-                <form class="otp-form" id="otp-form">
-                    <h2><i class="bi bi-key"></i> Enter OTP</h2>
-                    <p class="error" id="otp-error" style="color:red; display:none;"></p>
-                    <div class="input-group">
-                        <input type="text" name="otp" placeholder="Enter OTP" required maxlength="6">
-                        <i class="bi bi-key"></i>
-                    </div>
-                    <button type="submit">Verify OTP</button>
-
-                    <div class="timer-container">
-                        <div id="timer-status">
-                            <span id="countdown">60</span>
-                            <p>seconds remaining</p>
+                        <div class="input-group">
+                            <input type="text" name="email" placeholder="Email or Employee Code" required>
+                            <i class="bi bi-envelope"></i>
                         </div>
 
-                        <div id="resend-container" style="display:none; margin-top: 15px;">
-                            <p>Didn't receive the code?</p>
-                            <a href="javascript:void(0)" onclick="resendOTP()" style="color:#2E86C1; text-decoration:underline; font-weight:bold;">Resend OTP</a>
+                        <div class="input-group">
+                            <input type="password" name="password" placeholder="Password" required>
+                            <i class="bi bi-lock"></i>
                         </div>
-                    </div>
-                </form>
+
+                        <div class="form-options">
+                            <a href="#" class="forgot-pw" onclick="showForgot()">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+
+                <div id="forgot-section" style="display:none;">
+                    <form class="login-form" id="forgot-form">
+                        <h2><i class="bi bi-envelope"></i> Forgot Password</h2>
+                        <p class="error" id="forgot-error" style="display:none;"></p>
+
+                        <div class="input-group">
+                            <input type="email" name="email" placeholder="Enter your registered email" required>
+                            <i class="bi bi-envelope"></i>
+                        </div>
+
+                        <button type="submit">Send OTP</button>
+
+                        <p class="center-text">
+                            Remembered your password?
+                            <a href="#" onclick="showLogin()">Back to Login</a>
+                        </p>
+                    </form>
+                </div>
+
+                <div id="reset-section" style="display:none;">
+                    <form class="login-form" id="reset-form">
+                        <h2><i class="bi bi-shield-lock"></i> Reset Password</h2>
+                        <p class="error" id="reset-error" style="display:none;"></p>
+
+                        <div class="input-group">
+                            <input type="text" name="otp" placeholder="Enter OTP" required>
+                            <i class="bi bi-key"></i>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="password" name="password" placeholder="New Password" required>
+                            <i class="bi bi-lock"></i>
+                        </div>
+
+                        <button type="submit">Reset Password</button>
+
+                        <p class="center-text">
+                            <a href="#" onclick="showLogin()">Back to Login</a>
+                        </p>
+                    </form>
+                </div>
+
+                <div id="otp-section" style="display:none;">
+                    <form class="otp-form" id="otp-form">
+                        <h2><i class="bi bi-key"></i> Enter OTP</h2>
+                        <p class="error" id="otp-error" style="display:none;"></p>
+
+                        <div class="input-group">
+                            <input type="text" name="otp" placeholder="Enter OTP" required maxlength="6">
+                            <i class="bi bi-key"></i>
+                        </div>
+
+                        <button type="submit">Verify OTP</button>
+
+                        <div class="timer-container">
+                            <div id="timer-status">
+                                <span id="countdown">60</span>
+                                <p>seconds remaining</p>
+                            </div>
+
+                            <div id="resend-container" style="display:none; margin-top: 15px;">
+                                <p>Didn't receive the code?</p>
+                                <a href="javascript:void(0)" onclick="resendOTP()">Resend OTP</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

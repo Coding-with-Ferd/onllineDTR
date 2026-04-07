@@ -28,7 +28,6 @@ if (!function_exists('formatTime')) {
     <link rel="stylesheet" href="../assets/sidebar.css">
     <link rel="stylesheet" href="../assets/header.css">
     <link rel="stylesheet" href="../assets/attendance.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -57,7 +56,7 @@ if (!function_exists('formatTime')) {
                             <button class="btn-view" type="submit">View</button>
                         </form>
 
-                        <button class="btn-excel" onclick="window.location.href='../backend/download_attendance.php?from=<?= $from_date ?>&to=<?= $to_date ?>'">
+                        <button class="btn-excel" onclick="confirmExport()">
                             <i class="bi bi-file-earmark-spreadsheet"></i> Export
                         </button>
                         <button onclick="openPrintPreview()" class="btn-print-dark">
@@ -125,7 +124,15 @@ if (!function_exists('formatTime')) {
                                                 <span class="status-badge <?= $stat_class ?>"><?= $stat ?></span>
                                             </td>
                                             <td class="remarks-col">
-                                                <?= !empty($record['remarks']) ? htmlspecialchars($record['remarks']) : '-' ?>
+                                                <?php if (!empty($record['remarks'])): ?>
+                                                    <button
+                                                        class="btn-remarks"
+                                                        onclick="showRemarks(`<?= htmlspecialchars(addslashes($record['remarks'])) ?>`)">
+                                                        View
+                                                    </button>
+                                                <?php else: ?>
+                                                    -
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -138,6 +145,15 @@ if (!function_exists('formatTime')) {
             </div>
         </div>
     </div>
+    <!-- Remarks Modal -->
+    <div id="remarksModal" class="remarks-modal">
+        <div class="remarks-modal-content">
+            <span class="remarks-close" onclick="closeRemarksModal()">&times;</span>
+            <h3>Remarks</h3>
+            <p id="remarksText"></p>
+        </div>
+    </div>
+
     <div id="attendanceModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -199,22 +215,47 @@ if (!function_exists('formatTime')) {
             </form>
         </div>
     </div>
-    <?php if (isset($_SESSION['notif'])): ?>
-        <script>
-            Swal.fire({
-                title: '<?= $_SESSION['notif']['icon'] === "success" ? "Success!" : "Notice" ?>',
-                text: '<?= $_SESSION['notif']['message'] ?>',
-                icon: '<?= $_SESSION['notif']['icon'] ?>',
-                confirmButtonColor: '#1a6d18',
-                timer: 3000,
-                timerProgressBar: true
-            });
-        </script>
-        <?php unset($_SESSION['notif']);
-        ?>
-    <?php endif; ?>
+    <?php include '../components/notif.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/sidebar.js"></script>
     <script src="../assets/js/modal-att.js"></script>
+    <script>
+        function openPrintPreview() {
+            const url = "../components/print_attendance.php?from=<?= urlencode($from_date) ?>&to=<?= urlencode($to_date) ?>";
+            window.location.href = url;
+        }
+
+        function showRemarks(remarks) {
+            document.getElementById("remarksText").innerText = remarks;
+            const modal = document.getElementById("remarksModal");
+
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("show"), 10);
+        }
+
+        function closeRemarksModal() {
+            const modal = document.getElementById("remarksModal");
+            modal.classList.remove("show");
+            setTimeout(() => modal.style.display = "none", 300);
+        }
+
+        function confirmExport() {
+            Swal.fire({
+                title: 'Export attendance?',
+                text: 'Do you want to save the attendance file?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#1a6d18',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, export it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../backend/download_attendance.php?from=<?= urlencode($from_date) ?>&to=<?= urlencode($to_date) ?>";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

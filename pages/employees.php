@@ -9,7 +9,7 @@ if (!isLoggedIn()) {
 
 // Pagination setup
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$perPage = 8;
+$perPage = 9;
 $offset = ($currentPage - 1) * $perPage;
 
 // Total employees count
@@ -27,6 +27,8 @@ $pagination = [
     'base_url' => 'employees.php',
     'query_params' => $_GET,
 ];
+
+$branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_name ASC")->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -113,7 +115,23 @@ $pagination = [
                                             </span>
                                         </td>
                                         <td class="table-action">
-                                            <button type="button" class="edit-icon edit-btn" data-id="<?= $emp['id'] ?>" data-first-name="<?= htmlspecialchars($emp['first_name']) ?>" data-middle-name="<?= htmlspecialchars($emp['middle_name']) ?>" data-last-name="<?= htmlspecialchars($emp['last_name']) ?>" data-position="<?= htmlspecialchars($emp['position']) ?>" data-position-type="<?= $emp['position_type'] ?>" data-email="<?= htmlspecialchars($emp['email']) ?>" data-phone="<?= htmlspecialchars($emp['phone']) ?>" data-hire-date="<?= $emp['hire_date'] ?>" data-status="<?= $emp['status'] ?>" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                            <button
+                                                type="button"
+                                                class="edit-icon edit-btn"
+                                                data-id="<?= $emp['id'] ?>"
+                                                data-first-name="<?= htmlspecialchars($emp['first_name']) ?>"
+                                                data-middle-name="<?= htmlspecialchars($emp['middle_name']) ?>"
+                                                data-last-name="<?= htmlspecialchars($emp['last_name']) ?>"
+                                                data-position="<?= htmlspecialchars($emp['position']) ?>"
+                                                data-position-type="<?= $emp['position_type'] ?>"
+                                                data-email="<?= htmlspecialchars($emp['email']) ?>"
+                                                data-phone="<?= htmlspecialchars($emp['phone']) ?>"
+                                                data-hire-date="<?= $emp['hire_date'] ?>"
+                                                data-branch-id="<?= htmlspecialchars($emp['branch_id'] ?? '') ?>"
+                                                data-status="<?= $emp['status'] ?>"
+                                                title="Edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
                                             <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete-icon delete-confirm" title="Delete"><i class="bi bi-trash"></i></a>
                                         </td>
                                     </tr>
@@ -150,7 +168,18 @@ $pagination = [
                             </div>
                             <div class="form-group">
                                 <label>Hire Date</label>
-                                <input type="text" id="modernDatePicker" placeholder="Select Date..">
+                                <input type="text" id="modernDatePicker" name="hire_date" placeholder="Select Date.." required>
+                            </div>
+                            <div class="form-group">
+                                <label>Branch</label>
+                                <select name="branch_id" required>
+                                    <option value="">Select Branch</option>
+                                    <?php foreach ($branches as $branch): ?>
+                                        <option value="<?= $branch['id'] ?>">
+                                            <?= htmlspecialchars($branch['branch_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Position</label>
@@ -169,7 +198,7 @@ $pagination = [
                             </div>
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="text" name="phone">
+                                <input type="text" name="phone" maxlength="11" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                             <div class="form-group">
                                 <label>Status</label>
@@ -212,6 +241,17 @@ $pagination = [
                                 <input type="text" id="editDatePicker" name="hire_date" placeholder="Select Date..">
                             </div>
                             <div class="form-group">
+                                <label>Branch</label>
+                                <select name="branch_id" id="editBranchId" required>
+                                    <option value="">Select Branch</option>
+                                    <?php foreach ($branches as $branch): ?>
+                                        <option value="<?= $branch['id'] ?>">
+                                            <?= htmlspecialchars($branch['branch_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>Position</label>
                                 <input type="text" name="position" id="editPosition" required>
                             </div>
@@ -250,12 +290,14 @@ $pagination = [
         </div>
 
     </div>
+    <?php include '../components/notif.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/sidebar.js"></script>
     <script src="../assets/js/modal.js"></script>
     <script src="../assets/js/delete.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const editModal = document.getElementById("editEmployeeModal");
             const editCloseBtn = editModal.querySelector(".close");
             const editCancelBtn = editModal.querySelector(".close-btn");
@@ -272,7 +314,7 @@ $pagination = [
                     const calendar = instance.calendarContainer;
                     calendar.style.borderRadius = "12px";
                     calendar.style.boxShadow = "0 10px 25px rgba(0,0,0,0.1)";
-                    calendar.style.zIndex = "9999"; 
+                    calendar.style.zIndex = "9999";
                 }
             });
 
@@ -288,12 +330,13 @@ $pagination = [
             editButtons.forEach(btn => {
                 btn.addEventListener("click", function(e) {
                     e.preventDefault();
-                    
+
                     // Get employee data from data attributes
                     const employeeId = this.dataset.id;
                     const firstName = this.dataset.firstName;
                     const middleName = this.dataset.middleName;
                     const lastName = this.dataset.lastName;
+                    const branchId = this.dataset.branchId;
                     const position = this.dataset.position;
                     const positionType = this.dataset.positionType;
                     const email = this.dataset.email;
@@ -306,6 +349,7 @@ $pagination = [
                     document.getElementById("editFirstName").value = firstName;
                     document.getElementById("editMiddleName").value = middleName;
                     document.getElementById("editLastName").value = lastName;
+                    document.getElementById("editBranchId").value = branchId;
                     document.getElementById("editPosition").value = position;
                     document.getElementById("editPositionType").value = positionType;
                     document.getElementById("editEmail").value = email;
@@ -336,7 +380,7 @@ $pagination = [
 
             // Close when clicking outside modal
             window.addEventListener("click", (e) => {
-                if(e.target === editModal) closeEditModal();
+                if (e.target === editModal) closeEditModal();
             });
         });
     </script>

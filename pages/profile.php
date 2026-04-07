@@ -12,27 +12,18 @@ include '../backend/profile.php';
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/main.css">
-    <link rel="stylesheet" href="../assets/sidebar.css">
     <link rel="stylesheet" href="../assets/header.css">
     <link rel="stylesheet" href="../assets/profile.css">
 </head>
 
 <body>
     <div class="dashboard">
-        <?php include '../components/sidebar.php'; ?>
 
         <div class="main">
             <?php include '../components/header.php'; ?>
 
             <div class="content">
                 <div class="employee-container">
-
-                    <?php if (isset($_SESSION['notif'])): ?>
-                        <div class="alert <?= $_SESSION['notif']['icon'] === 'success' ? 'alert-success' : 'alert-error' ?>" style="margin-bottom: 16px; padding: 12px; border-radius: 8px;">
-                            <?= htmlspecialchars($_SESSION['notif']['message']) ?>
-                        </div>
-                        <?php unset($_SESSION['notif']); ?>
-                    <?php endif; ?>
 
                     <?php
                     $attendanceRows = [];
@@ -69,10 +60,14 @@ include '../backend/profile.php';
                                         <a href="profile.php?id=<?= $id ?>" style="font-size: 17px; background: #dc3545; color: white; padding: 7px 15px; border-radius: 4px; text-decoration: none;">Clear</a>
                                     <?php endif; ?>
                                 </form>
+                                <a href="../components/export_excel.php?id=<?= $id ?>&start_date=<?= urlencode($_GET['start_date'] ?? '') ?>&end_date=<?= urlencode($_GET['end_date'] ?? '') ?>"
+                                    class="btn-export-excel">
+                                    <i class="bi bi-file-earmark-spreadsheet"></i> Export
+                                </a>
 
                                 <a href="../components/print_preview.php?id=<?= $id ?>&start_date=<?= urlencode($_GET['start_date'] ?? '') ?>&end_date=<?= urlencode($_GET['end_date'] ?? '') ?>"
-                                   class="btn-print"
-                                   style="height: 45px; display: flex; align-items: center;">
+                                    class="btn-print"
+                                    style="height: 45px; display: flex; align-items: center;">
                                     <i class="bi bi-printer"></i>
                                 </a>
                             </div>
@@ -219,7 +214,7 @@ include '../backend/profile.php';
         </div>
     </div>
 
-    <script src="../assets/js/sidebar.js"></script>
+    <?php include '../components/notif.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmGenerateAcc(form) {
@@ -239,4 +234,5 @@ include '../backend/profile.php';
         }
     </script>
 </body>
+
 </html>

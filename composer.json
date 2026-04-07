@@ -1,0 +1,17 @@
+{
+    "name": "admin/onlinedtr",
+    "autoload": {
+        "psr-4": {
+            "Admin\\Onlinedtr\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Raijin-00",
+            "email": "saturogojo99999@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^5.5"
+    }
+}

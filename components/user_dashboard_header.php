@@ -5,6 +5,27 @@ if (session_status() === PHP_SESSION_NONE) {
 $userName = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Guest';
 $userPhoto = isset($_SESSION['user_photo']) ? $_SESSION['user_photo'] : '';
 $userInitial = strtoupper(substr(trim($userName), 0, 1));
+
+require_once '../config/session.php';
+require_once '../auth/db_connect.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// HANDLE LOGOUT
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_unset();
+    session_destroy();
+    header('Location: ../auth/signin.php');
+    exit();
+}
+
+// Block access if not logged in
+if (!isLoggedIn()) {
+    header('Location: ../auth/signin.php');
+    exit();
+}
 ?>
 
 <header class="user-dashboard-header">

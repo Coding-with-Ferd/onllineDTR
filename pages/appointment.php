@@ -22,7 +22,7 @@ $expired_leaves = $conn->query("
     )
 ");
 
-while($leave = $expired_leaves->fetch_assoc()) {
+while ($leave = $expired_leaves->fetch_assoc()) {
     $conn->query("UPDATE employees SET status = 'active', updated_at = NOW() WHERE id = " . $leave['employee_id']);
 }
 
@@ -79,7 +79,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                         <h1><i class="bi bi-calendar-x" style="color: #1a7318;"></i> Leave Requests</h1>
                         <p>Manage employee leave requests and approvals.</p>
                     </div>
-                    <button class="btn-add-appointment" onclick="openModal()">
+                    <button class="btn-add-appointment">
                         <i class="bi bi-plus-lg"></i> New Leave Request
                     </button>
                 </div>
@@ -134,35 +134,48 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                                             <div class="datetime">
                                                 <span><?php echo date('M d, Y', strtotime($leave['start_date'])); ?> - <?php echo date('M d, Y', strtotime($leave['end_date'])); ?></span>
                                                 <small><?php
-                                                    $start = new DateTime($leave['start_date']);
-                                                    $end = new DateTime($leave['end_date']);
-                                                    $days = $start->diff($end)->days + 1;
-                                                    echo $days . ' day' . ($days > 1 ? 's' : '');
-                                                ?></small>
+                                                        $start = new DateTime($leave['start_date']);
+                                                        $end = new DateTime($leave['end_date']);
+                                                        $days = $start->diff($end)->days + 1;
+                                                        echo $days . ' day' . ($days > 1 ? 's' : '');
+                                                        ?></small>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars(substr($leave['reason'], 0, 50)) . (strlen($leave['reason']) > 50 ? '...' : ''); ?></td>
+                                        <td>
+                                            <button
+                                                class="btn-reason"
+                                                onclick="showReason(`<?= htmlspecialchars(addslashes($leave['reason'])) ?>`)">
+                                                View
+                                            </button>
+                                        </td>
                                         <td>
                                             <span class="badge badge-<?php echo strtolower($leave['status']); ?>">
                                                 <?php echo htmlspecialchars($leave['status']); ?>
-                                                <?php if($leave['status'] !== 'Pending' && $leave['approver_first']): ?>
+                                                <?php if ($leave['status'] !== 'Pending' && $leave['approver_first']): ?>
                                                     <br><small>by <?php echo htmlspecialchars($leave['approver_first'] . ' ' . $leave['approver_last']); ?></small>
                                                 <?php endif; ?>
                                             </span>
                                         </td>
                                         <td><?php echo date('M d, Y', strtotime($leave['created_at'])); ?></td>
-                                        <td style="text-align:right;">
-                                            <?php if($leave['status'] === 'Pending'): ?>
-                                                <a href="../backend/leave_request.php?action=approve&id=<?php echo $leave['id']; ?>" class="btn-icon approve" title="Approve" onclick="return confirm('Approve this leave request?')">
-                                                    <i class="bi bi-check-circle"></i>
+                                        <td style="text-align:right; display:flex; gap:6px; justify-content:flex-end;">
+
+                                            <?php if ($leave['status'] === 'Pending'): ?>
+                                                <a href="../backend/leave_request.php?action=approve&id=<?= $leave['id']; ?>"
+                                                    class="btn-action approve">
+                                                    Approve
                                                 </a>
-                                                <a href="../backend/leave_request.php?action=reject&id=<?php echo $leave['id']; ?>" class="btn-icon reject" title="Reject" onclick="return confirm('Reject this leave request?')">
-                                                    <i class="bi bi-x-circle"></i>
+
+                                                <a href="../backend/leave_request.php?action=reject&id=<?= $leave['id']; ?>"
+                                                    class="btn-action reject">
+                                                    Reject
                                                 </a>
                                             <?php endif; ?>
-                                            <a href="../backend/leave_request.php?delete=<?php echo $leave['id']; ?>" class="btn-icon delete" title="Delete" onclick="return confirm('Delete this leave request?')">
-                                                <i class="bi bi-trash"></i>
+
+                                            <a href="../backend/leave_request.php?delete=<?= $leave['id']; ?>"
+                                                class="btn-action delete">
+                                                Delete
                                             </a>
+
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -173,6 +186,15 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                             <?php endif; ?>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Reason Modal -->
+                <div id="reasonModal" class="reason-modal">
+                    <div class="reason-modal-content">
+                        <span class="reason-close" onclick="closeReasonModal()">&times;</span>
+                        <h3>Leave Reason</h3>
+                        <p id="reasonText"></p>
+                    </div>
                 </div>
 
                 <!-- Leave Request Modal -->
@@ -187,7 +209,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                                     <option value="">Select Employee</option>
                                     <?php
                                     $employees->data_seek(0); // Reset result pointer
-                                    while($emp = $employees->fetch_assoc()):
+                                    while ($emp = $employees->fetch_assoc()):
                                     ?>
                                         <option value="<?php echo $emp['id']; ?>">
                                             <?php echo htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name'] . ' (' . $emp['employee_code'] . ')'); ?>
@@ -196,7 +218,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                                             $status_query = $conn->query("SELECT status FROM employees WHERE id = " . $emp['id']);
                                             $status_result = $status_query->fetch_assoc();
                                             $current_status = $status_result['status'];
-                                            if($current_status === 'on leave') {
+                                            if ($current_status === 'on leave') {
                                                 echo ' - ON LEAVE';
                                             }
                                             ?>
@@ -228,7 +250,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                             </div>
                             <div class="form-group">
                                 <label>Reason</label>
-                                <textarea name="reason" rows="3" placeholder="Please provide a reason for your leave request..."></textarea>
+                                <textarea name="reason" rows="3" placeholder="Please provide a reason for your leave request..." required></textarea>
                             </div>
                             <div class="modal-actions">
                                 <button type="submit" class="btn-add-appointment">
@@ -242,10 +264,13 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
             </div>
         </div>
     </div>
+    <?php include '../components/notif.php'; ?>
     <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/actions.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("leaveModal");
             const openBtn = document.querySelector(".btn-add-appointment");
             const closeBtn = modal.querySelector(".close");
@@ -296,7 +321,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
             };
 
             // Open modal
-            openBtn.addEventListener("click", function(e){
+            openBtn.addEventListener("click", function(e) {
                 e.preventDefault();
                 modal.style.display = "block";
                 setTimeout(() => {
@@ -310,9 +335,23 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
 
             // Close when clicking outside modal
             window.addEventListener("click", (e) => {
-                if(e.target === modal) closeModal();
+                if (e.target === modal) closeModal();
             });
         });
+
+        function showReason(reason) {
+            document.getElementById("reasonText").innerText = reason;
+            const modal = document.getElementById("reasonModal");
+
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("show"), 10);
+        }
+
+        function closeReasonModal() {
+            const modal = document.getElementById("reasonModal");
+            modal.classList.remove("show");
+            setTimeout(() => modal.style.display = "none", 300);
+        }
     </script>
 </body>
 

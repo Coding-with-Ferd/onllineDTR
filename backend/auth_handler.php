@@ -1,7 +1,7 @@
 <?php
 ob_start();
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // hide warnings/notices from breaking JSON
+ini_set('display_errors', 0); 
 header('Content-Type: application/json');
 
 use PHPMailer\PHPMailer\PHPMailer;

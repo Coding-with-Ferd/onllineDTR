@@ -1,18 +1,96 @@
+/* HEADER */
+
+:root {
+    --header-green-1: #166534;
+    --header-green-2: #1f7a3e;
+    --header-green-3: #2fa45b;
+    --header-accent: #e6c04f;
+}
+
+/* Header container */
 header {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
-    background: linear-gradient(135deg, #226214 30%, #43cc25 100%);
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+    padding: 14px 28px;
+
+    background: linear-gradient(
+        180deg,
+        #166534 0%,
+        #1f7a3e 55%,
+        #2fa45b 100%
+    );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
+/* subtle shine */
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.08), transparent 35%);
+    pointer-events: none;
+}
+
+/* Title */
 header .title {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff;
 }
 
+/* Date + Time */
 header .datetime {
-    font-size: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+
+    background: rgba(255,255,255,0.12);
+    padding: 8px 14px;
+    border-radius: 12px;
+
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    header {
+        padding: 12px 16px;
+    }
+
+    header .title {
+        font-size: 1.1rem;
+    }
+
+    header .datetime {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    header .datetime {
+        width: 100%;
+        text-align: left;
+    }
 }
