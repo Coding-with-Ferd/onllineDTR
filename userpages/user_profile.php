@@ -281,7 +281,21 @@ if (!function_exists('formatTime')) {
                                             <td><strong><?= date('M d, Y', strtotime($row['attendance_date'])) ?></strong></td>
                                             <td><?= formatTime($row['time_in']) ?></td>
                                             <td><?= formatTime($row['time_out']) ?></td>
-                                            <td><span class="status-badge status-active">Present</span></td>
+                                            <td>
+                                                <?php
+                                                $statusText = $row['status'] ?? 'Present';
+                                                $statusClass = strtolower($statusText) === 'active' ? 'status-active' : 'status-inactive';
+
+                                                if (in_array($statusText, ['Present', 'Holiday', 'SNW Holiday', 'Leave'])) {
+                                                    $statusClass = 'status-active';
+                                                } elseif ($statusText === 'Absent') {
+                                                    $statusClass = 'status-inactive';
+                                                }
+                                                ?>
+                                                <span class="status-badge <?= $statusClass ?>">
+                                                    <?= htmlspecialchars($statusText) ?>
+                                                </span>
+                                            </td>
                                         </tr>
                                     <?php endwhile; ?>
                                 <?php else: ?>

@@ -8,6 +8,22 @@ if (!isLoggedIn()) {
     exit();
 }
 
+// Ensure user has an associated employee record
+$userEmail = $_SESSION['user_email'];
+$stmt = $conn->prepare("SELECT id, first_name, last_name, position FROM employees WHERE email = ? OR employee_code = ?");
+$stmt->bind_param("ss", $userEmail, $userEmail);
+$stmt->execute();
+$employeeResult = $stmt->get_result();
+
+if ($employeeResult->num_rows === 0) {
+    die("No employee profile found for this account.");
+}
+
+$employee = $employeeResult->fetch_assoc();
+$emp_id = $employee['id'];
+$emp_name = $employee['first_name'] . ' ' . $employee['last_name'];
+$emp_position = $employee['position'];
+
 // Fetch user's leave requests
 $query = $conn->query("
     SELECT lr.*, e.first_name, e.last_name,
@@ -15,7 +31,7 @@ $query = $conn->query("
     FROM leave_requests lr
     JOIN employees e ON lr.employee_id = e.id
     LEFT JOIN employees approver ON lr.approved_by = approver.id
-    WHERE lr.employee_id = {$_SESSION['user_id']}
+    WHERE lr.employee_id = {$emp_id}
     ORDER BY lr.created_at DESC
 ");
 $leave_requests = $query->fetch_all(MYSQLI_ASSOC);
@@ -28,7 +44,7 @@ $stats = $conn->query("
         SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as approved,
         SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) as rejected
     FROM leave_requests
-    WHERE employee_id = {$_SESSION['user_id']}
+    WHERE employee_id = {$emp_id}
 ")->fetch_assoc();
 ?>
 
@@ -63,25 +79,6 @@ $stats = $conn->query("
                     </button>
                 </div>
 
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <span class="stat-label">Total Requests</span>
-                        <span class="stat-value"><?php echo $stats['total_requests'] ?? 0; ?></span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Pending</span>
-                        <span class="stat-value" style="color: #f59e0b;"><?php echo $stats['pending'] ?? 0; ?></span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Approved</span>
-                        <span class="stat-value" style="color: #1a7318;"><?php echo $stats['approved'] ?? 0; ?></span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Rejected</span>
-                        <span class="stat-value" style="color: #dc2626;"><?php echo $stats['rejected'] ?? 0; ?></span>
-                    </div>
-                </div>
-
                 <div class="table-card">
                     <table class="modern-table">
                         <thead>
@@ -91,7 +88,7 @@ $stats = $conn->query("
                                 <th>Reason</th>
                                 <th>Status</th>
                                 <th>Requested</th>
-                                <th style="text-align:right;">Actions</th>
+                                <th style="text-align:right;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,26 +100,32 @@ $stats = $conn->query("
                                             <div class="datetime">
                                                 <span><?php echo date('M d, Y', strtotime($leave['start_date'])); ?> - <?php echo date('M d, Y', strtotime($leave['end_date'])); ?></span>
                                                 <small><?php
-                                                    $start = new DateTime($leave['start_date']);
-                                                    $end = new DateTime($leave['end_date']);
-                                                    $days = $start->diff($end)->days + 1;
-                                                    echo $days . ' day' . ($days > 1 ? 's' : '');
-                                                ?></small>
+                                                        $start = new DateTime($leave['start_date']);
+                                                        $end = new DateTime($leave['end_date']);
+                                                        $days = $start->diff($end)->days + 1;
+                                                        echo $days . ' day' . ($days > 1 ? 's' : '');
+                                                        ?></small>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars(substr($leave['reason'], 0, 50)) . (strlen($leave['reason']) > 50 ? '...' : ''); ?></td>
+                                        <td>
+                                            <button
+                                                class="btn-reason"
+                                                onclick="showReason(`<?= htmlspecialchars(addslashes($leave['reason'])) ?>`)">
+                                                View
+                                            </button>
+                                        </td>
                                         <td>
                                             <span class="badge badge-<?php echo strtolower($leave['status']); ?>">
                                                 <?php echo htmlspecialchars($leave['status']); ?>
-                                                <?php if($leave['status'] !== 'Pending' && $leave['approver_first']): ?>
+                                                <?php if ($leave['status'] !== 'Pending' && $leave['approver_first']): ?>
                                                     <br><small>by <?php echo htmlspecialchars($leave['approver_first'] . ' ' . $leave['approver_last']); ?></small>
                                                 <?php endif; ?>
                                             </span>
                                         </td>
                                         <td><?php echo date('M d, Y', strtotime($leave['created_at'])); ?></td>
                                         <td style="text-align:right;">
-                                            <?php if($leave['status'] === 'Pending'): ?>
-                                                <a href="../backend/leave_request.php?delete=<?php echo $leave['id']; ?>" class="btn-icon delete" title="Cancel Request" onclick="return confirm('Cancel this leave request?')">
+                                            <?php if ($leave['status'] === 'Pending'): ?>
+                                                <a href="../backend/user_leave.php?delete=<?php echo $leave['id']; ?>" class="btn-action delete" title="Cancel Request" onclick="return confirm('Cancel this leave request?')">
                                                     <i class="bi bi-x-circle"></i>
                                                 </a>
                                             <?php endif; ?>
@@ -138,13 +141,22 @@ $stats = $conn->query("
                     </table>
                 </div>
 
+                <!-- Reason Modal -->
+                <div id="reasonModal" class="reason-modal">
+                    <div class="reason-modal-content">
+                        <span class="reason-close" onclick="closeReasonModal()">&times;</span>
+                        <h3>Leave Reason</h3>
+                        <p id="reasonText"></p>
+                    </div>
+                </div>
+
                 <!-- Leave Request Modal -->
                 <div id="leaveModal" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Request Leave</h2>
-                        <form method="POST" action="../backend/leave_request.php">
-                            <input type="hidden" name="employee_id" value="<?php echo $_SESSION['user_id']; ?>">
+                        <form method="POST" action="../backend/user_leave.php">
+                            <input type="hidden" name="employee_id" value="<?php echo $emp_id; ?>">
                             <div class="form-group">
                                 <label>Leave Type</label>
                                 <select name="leave_type" required>
@@ -183,9 +195,11 @@ $stats = $conn->query("
             </div>
         </div>
     </div>
+    <?php include '../components/notif.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("leaveModal");
             const openBtn = document.querySelector(".btn-add-appointment");
             const closeBtn = modal.querySelector(".close");
@@ -235,7 +249,7 @@ $stats = $conn->query("
             };
 
             // Open modal
-            openBtn.addEventListener("click", function(e){
+            openBtn.addEventListener("click", function(e) {
                 e.preventDefault();
                 modal.style.display = "block";
                 setTimeout(() => {
@@ -249,13 +263,24 @@ $stats = $conn->query("
 
             // Close when clicking outside modal
             window.addEventListener("click", (e) => {
-                if(e.target === modal) closeModal();
+                if (e.target === modal) closeModal();
             });
         });
-    </script>
-</body>
 
-</html>
+        function showReason(reason) {
+            document.getElementById("reasonText").innerText = reason;
+            const modal = document.getElementById("reasonModal");
+
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("show"), 10);
+        }
+
+        function closeReasonModal() {
+            const modal = document.getElementById("reasonModal");
+            modal.classList.remove("show");
+            setTimeout(() => modal.style.display = "none", 300);
+        }
+    </script>
 </body>
 
 </html>

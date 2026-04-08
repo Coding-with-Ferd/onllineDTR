@@ -35,6 +35,17 @@ if ($employeeResult->num_rows === 0) {
 
     $hasTimeIn = $attendanceRecord && !empty($attendanceRecord['time_in']);
     $hasTimeOut = $attendanceRecord && !empty($attendanceRecord['time_out']);
+
+    $nonTimeStatuses = ['absent', 'snw holiday', 'holiday', 'on leave', 'leave'];
+
+    $hasSavedStatusOnly = $attendanceRecord
+        && !empty($attendanceRecord['status'])
+        && empty($attendanceRecord['time_in'])
+        && empty($attendanceRecord['time_out'])
+        && (
+            in_array(strtolower(trim($attendanceRecord['status'])), $nonTimeStatuses)
+            || str_contains(strtolower(trim($attendanceRecord['status'])), 'leave')
+        );
 }
 ?>
 
@@ -87,8 +98,10 @@ if ($employeeResult->num_rows === 0) {
                         <div class="time-card">
                             <div class="card-status-header">
                                 <span class="status-label">
-                                    <?php if (!$hasTimeIn): ?>
+                                    <?php if (!$hasTimeIn && !$hasSavedStatusOnly): ?>
                                         <i class="bi bi-clock-history"></i> Not Timed In Yet
+                                    <?php elseif ($hasSavedStatusOnly): ?>
+                                        <i class="bi bi-check2-circle"></i> Status Saved
                                     <?php elseif ($hasTimeIn && !$hasTimeOut): ?>
                                         <i class="bi bi-hourglass-split"></i> Currently Timed In
                                     <?php else: ?>
@@ -106,7 +119,7 @@ if ($employeeResult->num_rows === 0) {
                                 <input type="hidden" name="date" value="<?= $dateToday ?>">
                                 <input type="hidden" name="user_dashboard_redirect" value="1">
 
-                                <?php if (!$hasTimeIn): ?>
+                                <?php if (!$hasTimeIn && !$hasSavedStatusOnly): ?>
                                     <div class="form-grid">
                                         <div class="form-group">
                                             <label for="statusSelect"><i class="bi bi-ui-checks-grid"></i> Status</label>
@@ -125,8 +138,7 @@ if ($employeeResult->num_rows === 0) {
                                                 id="remarks"
                                                 name="remarks"
                                                 class="form-input"
-                                                placeholder="Enter remarks (e.g. Late, Half-day, Off-site...)"
-                                                style="text-transform: uppercase;">
+                                                placeholder="Enter remarks (e.g. Late, Half-day, Off-site...)">
                                         </div>
                                     </div>
 
@@ -137,7 +149,7 @@ if ($employeeResult->num_rows === 0) {
                                                 <span>TIME IN</span>
                                             </button>
 
-                                            <button type="button" class="btn-time-out disabled tooltip" data-tooltip="You must Time In first" disabled>
+                                            <button type="submit" name="timeout" class="btn-time-out">
                                                 <i class="bi bi-box-arrow-left"></i>
                                                 <span>TIME OUT</span>
                                             </button>
@@ -147,6 +159,33 @@ if ($employeeResult->num_rows === 0) {
                                             <i class="bi bi-check-circle"></i>
                                             <span>SAVE STATUS</span>
                                         </button>
+                                    </div>
+                                <?php elseif ($hasSavedStatusOnly): ?>
+                                    <div class="attendance-summary">
+                                        <div class="summary-item">
+                                            <span class="summary-label">Status</span>
+                                            <span class="summary-value"><?= htmlspecialchars($attendanceRecord['status'] ?? '-') ?></span>
+                                        </div>
+
+                                        <div class="summary-item">
+                                            <span class="summary-label">Remarks</span>
+                                            <span class="summary-value"><?= !empty($attendanceRecord['remarks']) ? htmlspecialchars($attendanceRecord['remarks']) : '-' ?></span>
+                                        </div>
+
+                                        <div class="summary-item">
+                                            <span class="summary-label">Time In</span>
+                                            <span class="summary-value">-</span>
+                                        </div>
+
+                                        <div class="summary-item">
+                                            <span class="summary-label">Time Out</span>
+                                            <span class="summary-value">-</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="success-message">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                        Status saved for today.
                                     </div>
 
                                 <?php elseif ($hasTimeIn && !$hasTimeOut): ?>
@@ -228,6 +267,8 @@ if ($employeeResult->num_rows === 0) {
         </div>
     </div>
 
+    <?php include '../components/notif.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function updateClock() {
             const now = new Date();
@@ -269,34 +310,51 @@ if ($employeeResult->num_rows === 0) {
 
             if (!status || !timeInContainer || !btnSaveStatus) return;
 
-            if (status.value === 'Present') {
+            const value = status.value;
+
+            if (value === 'Present') {
                 timeInContainer.style.display = 'flex';
                 btnSaveStatus.style.display = 'none';
+            } else if (value === 'SNW Holiday' || value === 'Holiday') {
+                timeInContainer.style.display = 'flex';
+                btnSaveStatus.style.display = 'flex';
             } else {
                 timeInContainer.style.display = 'none';
                 btnSaveStatus.style.display = 'flex';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             updateClock();
             updateAttendanceUI();
             setInterval(updateClock, 1000);
+
+            const attendanceForm = document.getElementById('attendanceForm');
+            if (attendanceForm) {
+                attendanceForm.addEventListener('submit', function(e) {
+                    const btn = e.submitter;
+                    if (btn) {
+                        btn.innerHTML = "Processing...";
+                        btn.style.opacity = "0.5";
+                        btn.style.pointerEvents = "none";
+                    }
+                });
+            }
         });
 
         <?php
         if (isset($_SESSION['notif'])) {
             $notif = $_SESSION['notif'];
             echo "
-            Swal.fire({
-                icon: '{$notif['icon']}',
-                title: " . json_encode($notif['message']) . ",
-                showConfirmButton: false,
-                timer: 3000,
-                toast: true,
-                position: 'top-end'
-            });
-            ";
+        Swal.fire({
+            icon: '{$notif['icon']}',
+            title: " . json_encode($notif['message']) . ",
+            showConfirmButton: false,
+            timer: 3000,
+            toast: true,
+            position: 'top-end'
+        });
+        ";
             unset($_SESSION['notif']);
         }
         ?>

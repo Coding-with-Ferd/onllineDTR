@@ -53,10 +53,11 @@ if (!isLoggedIn()) {
         <a href="../userpages/user_dashboard.php">Dashboard</a>
         <a href="../userpages/user_profile.php">Profile</a>
         <a href="../userpages/user_appointment.php">Appointments</a>
-        <a href="#" id="userDashboardLogoutLink">Logout</a>
+        <a href="#" id="logoutLink">Logout</a>
     </nav>
 </header>
 
+<script src="../assets/js/logout.js"></script>
 <script>
     function updateUserDashboardDateTime() {
         const now = new Date();
@@ -83,34 +84,6 @@ if (!isLoggedIn()) {
     if (headerToggle && headerNav) {
         headerToggle.addEventListener('click', function () {
             headerNav.classList.toggle('active');
-        });
-    }
-
-    const userDashboardLogoutLink = document.getElementById('userDashboardLogoutLink');
-    if (userDashboardLogoutLink) {
-        userDashboardLogoutLink.addEventListener('click', function (event) {
-            event.preventDefault();
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Sign Out?',
-                    text: 'Are you sure you want to end your session?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Logout',
-                    cancelButtonText: 'Cancel',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '?action=logout';
-                    }
-                });
-            } else {
-                if (confirm('Sign Out? Are you sure?')) {
-                    window.location.href = '?action=logout';
-                }
-            }
         });
     }
 </script>
