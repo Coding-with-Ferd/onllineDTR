@@ -4,7 +4,6 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Check if this is an update operation
     if (isset($_POST['action']) && $_POST['action'] === 'update') {
         $employee_id = $_POST['employee_id'];
         $first_name = $_POST['first_name'];
@@ -50,9 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'];
 
     // Generate Employee Code
-    $date_part = date('ymd', strtotime($hire_date)); // YYMMDD
+    $date_part = date('ymd', strtotime($hire_date)); 
 
-    // Count how many employees exist in the table
     $result = $conn->query("SELECT COUNT(*) as total FROM employees");
     $row = $result->fetch_assoc();
     $sequence = $row['total'] + 1;
@@ -103,6 +101,5 @@ if (isset($_GET['id'])) {
     ];
 }
 
-// Redirect back to employees page
 header("Location: ../pages/employees.php");
 exit;

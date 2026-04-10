@@ -20,7 +20,7 @@ $response = ['success' => false, 'status' => 'error', 'message' => ''];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $action = $_POST['action'] ?? '';
 
-    // ------------------- LOGIN -------------------
+    // LOGIN 
     if ($action === 'login') {
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -39,9 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if ($user['Status'] === 'Active') {
                         $remember = isset($_POST['remember']) ? true : false;
                         
-                        // If it's an employee, skip OTP entirely
                         if ($user['Role'] === 'Employee') {
-                            // Fetch the employee record to get photo path if available
                             $photo = '';
                             $empStmt = $conn->prepare("SELECT photo FROM employees WHERE email=? OR employee_code=? LIMIT 1");
                             $empStmt->bind_param("ss", $user['Email'], $user['Email']);
@@ -67,9 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 'message' => 'Login successful'
                             ];
                         } 
-                        // If admin or other, require OTP
                         else {
-                            // Check if an OTP was requested recently (30 seconds cooldown)
                             if (isset($_SESSION['last_otp_time']) && (time() - $_SESSION['last_otp_time']) < 30) {
                                 $remaining = 30 - (time() - $_SESSION['last_otp_time']);
                                 $response['message'] = "Please wait {$remaining} seconds before requesting a new OTP.";
@@ -123,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ------------------- VERIFY OTP -------------------
+    // VERIFY OTP 
     elseif ($action === 'verify_otp') {
         if (!isset($_SESSION['otp_data'])) {
             $response['message'] = "Session expired. Try login again.";
@@ -136,14 +132,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $response['message'] = "OTP expired.";
             } elseif ((int)$entered_otp === (int)$data['otp']) {
 
-                // Fetch user email & role
                 $stmt = $conn->prepare("SELECT Email, Role FROM user WHERE UserID=?");
                 $stmt->bind_param("i", $data['user_id']);
                 $stmt->execute();
                 $userInfo = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
 
-                // Fetch employee photo if any
                 $photo = '';
                 $empStmt = $conn->prepare("SELECT photo FROM employees WHERE email=? OR employee_code=? LIMIT 1");
                 $empStmt->bind_param("ss", $userInfo['Email'], $userInfo['Email']);
@@ -176,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ------------------- FORGOT PASSWORD -------------------
+    // FORGOT PASSWORD 
     elseif ($action === 'forgot_password') {
         $email = trim($_POST['email'] ?? '');
         if (empty($email)) {
@@ -224,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // ------------------- RESET PASSWORD -------------------
+    // RESET PASSWORD 
     elseif ($action === 'reset_password') {
         $otp = trim($_POST['otp'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -252,7 +246,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// End of POST
 ob_clean();
 echo json_encode($response);
 exit();

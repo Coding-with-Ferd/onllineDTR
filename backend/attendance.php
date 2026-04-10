@@ -4,7 +4,7 @@ include '../auth/db_connect.php';
 
 date_default_timezone_set('Asia/Manila');
 
-// 1. GET LOGIC (For displaying the table)
+// GET LOGIC (For displaying the table)
 $from_date = $_GET['from'] ?? date('Y-m-d');
 $to_date   = $_GET['to'] ?? date('Y-m-d');
 
@@ -19,7 +19,7 @@ while ($row = $res->fetch_assoc()) {
     $attendance_records[$row['employee_id']][$row['attendance_date']] = $row;
 }
 
-// 2. HELPERS
+// HELPERS
 function formatTime($time)
 {
     return $time ? date("h:i A", strtotime($time)) : '-';
@@ -38,7 +38,7 @@ function totalHours($time_in, $time_out, $status = 'Present')
     return number_format($diff->h + ($diff->i / 60), 2);
 }
 
-// 3. POST LOGIC (For the Modal)
+// POST LOGIC (For the Modal)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emp_id = $_POST['employee_id'] ?? null;
     $date   = $_POST['date'] ?? date('Y-m-d');

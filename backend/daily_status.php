@@ -3,7 +3,7 @@ include '../auth/db_connect.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $date = $_POST['status_date'];
-    $statuses = $_POST['status']; // array: employee_id => status
+    $statuses = $_POST['status']; 
 
     foreach($statuses as $emp_id => $status){
         // Check if record exists

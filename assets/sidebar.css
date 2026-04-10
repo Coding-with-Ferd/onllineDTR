@@ -27,7 +27,6 @@
     flex-direction: column;
 }
 
-/* subtle glossy effect */
 .sidebar::before {
     content: "";
     position: absolute;
@@ -114,7 +113,7 @@
 /* Toggle button */
 .toggle-btn {
     position: absolute;
-    top: 90px;
+    top: 50%;
     right: -14px;
     width: 34px;
     height: 34px;

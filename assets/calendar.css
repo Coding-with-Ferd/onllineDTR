@@ -11,7 +11,6 @@
     background-color: var(--bg-light);
 }
 
-/* Pro Header Design */
 .calendar-header-section {
     display: flex;
     justify-content: space-between;
@@ -33,7 +32,6 @@
     font-size: 0.95rem;
 }
 
-/* Elegant Navigation Controls */
 .calendar-controls {
     display: flex;
     align-items: center;
@@ -72,7 +70,6 @@
     transform: translateY(-2px);
 }
 
-/* Calendar Card */
 .calendar-card {
     background: #fff;
     border-radius: 24px;
@@ -128,7 +125,6 @@
     border: none;
 }
 
-/* Modern Indicators */
 .is-today {
     background: var(--soft-green);
     border: 2px solid var(--brand-green) !important;

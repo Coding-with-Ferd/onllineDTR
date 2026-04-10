@@ -1,5 +1,5 @@
 document.getElementById('logoutLink').addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent immediate navigation
+            e.preventDefault(); 
 
             Swal.fire({
                 title: 'Sign Out?',
@@ -13,13 +13,11 @@ document.getElementById('logoutLink').addEventListener('click', function(e) {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirect to the actual logout logic in PHP
                     window.location.href = "?action=logout";
                 }
             });
         });
 
-        // Sidebar toggle logic (keeping your existing functionality)
         const toggleBtn = document.getElementById('toggleBtn');
         const sidebar = document.getElementById('sidebar');
         if(toggleBtn) {

@@ -1,5 +1,4 @@
 <?php
-// Ensure the session is started so we can access session variables
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -29,7 +28,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     exit;
 }
 
-// Get user name from session, fallback to 'Guest' if not set
 $display_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
 ?>
 <!DOCTYPE html>

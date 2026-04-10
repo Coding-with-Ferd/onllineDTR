@@ -31,9 +31,7 @@ function setNotif($icon, $message)
 
 $action = $_POST['action'] ?? '';
 
-/* =========================
-   UPDATE INFO
-========================= */
+/* UPDATE INFO */
 if ($action === 'update_info') {
     $fullname = trim($_POST['fullname'] ?? '');
     $email    = trim($_POST['email'] ?? '');
@@ -58,9 +56,7 @@ if ($action === 'update_info') {
     exit;
 }
 
-/* =========================
-   CHANGE PASSWORD
-========================= */
+/* CHANGE PASSWORD */
 if ($action === 'change_password') {
     $current_password = $_POST['current_password'] ?? '';
     $new_password     = $_POST['new_password'] ?? '';
@@ -117,9 +113,7 @@ if ($action === 'change_password') {
     exit;
 }
 
-/* =========================
-   UPLOAD PHOTO
-========================= */
+/* UPLOAD PHOTO */
 if ($action === 'upload_photo') {
     if (!isset($_FILES['photo']) || $_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
         setNotif('warning', 'Please select a photo to upload.');
@@ -187,9 +181,7 @@ if ($action === 'upload_photo') {
     exit;
 }
 
-/* =========================
-   INVALID ACTION
-========================= */
+/* INVALID ACTION */
 setNotif('error', 'Invalid request.');
 header('Location: ../pages/admin_profile.php');
 exit;

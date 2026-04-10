@@ -24,7 +24,6 @@ function confirmAction(selector, title, text, icon, confirmText, confirmColor) {
     });
 }
 
-// APPLY TO YOUR BUTTONS
 confirmAction(
     '.approve',
     'Approve Request?',

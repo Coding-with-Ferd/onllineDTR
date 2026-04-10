@@ -211,7 +211,7 @@
     color: #94400f;
 }
 
-/* Print Mode Optimization */
+/* Print Mode */
 @media print {
 
     .header-actions,
@@ -247,9 +247,7 @@
     width: 38px;
     height: 38px;
     background: #e8f5e9;
-    /* Light Green */
     color: #1a7318;
-    /* Dark Green */
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -261,9 +259,7 @@
 
 .user-avatar.absent-initial {
     background: #fee2e2;
-    /* Light Red */
     color: #991b1b;
-    /* Dark Red */
 }
 
 .user-details {
@@ -293,7 +289,6 @@
 .time-col {
     color: #64748b;
     font-family: 'Inter', sans-serif;
-    /* Cleaner for numbers */
 }
 
 .hours-col {
@@ -305,13 +300,11 @@
     color: #2d3748 !important;
 }
 
-/* Table Hover Effect */
 .attendance-table tr:hover {
     background-color: #f8fafc;
     transition: background 0.2s ease;
 }
 
-/* Print Overrides to keep avatars in print if needed */
 @media print {
     .user-avatar {
         -webkit-print-color-adjust: exact;
@@ -418,8 +411,8 @@
 
 /* Custom Modal Button Colors */
 .action-buttons-modal .btn-timein {
-    background-color: #e6f4ea; /* Light Green */
-    color: #1a6d18;            /* Your Brand Green Text */
+    background-color: #e6f4ea; 
+    color: #1a6d18;            
     border: 1px solid #c2e0c1;
     transition: 0.3s;
 }
@@ -429,8 +422,8 @@
 }
 
 .action-buttons-modal .btn-timeout {
-    background-color: #fde8e8; /* Light Red */
-    color: #c81e1e;            /* Professional Red Text */
+    background-color: #fde8e8; 
+    color: #c81e1e;            
     border: 1px solid #f8b4b4;
     transition: 0.3s;
 }
@@ -439,7 +432,6 @@
     background-color: #fbd5d5;
 }
 
-/* Ensure buttons are side-by-side */
 .action-buttons-modal {
     display: flex;
     gap: 12px;

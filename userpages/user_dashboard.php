@@ -2,7 +2,6 @@
 require_once '../config/session.php';
 require_once '../auth/db_connect.php';
 
-// Block access if not logged in
 if (!isLoggedIn()) {
     header('Location: ../auth/signin.php');
     exit();
@@ -10,7 +9,6 @@ if (!isLoggedIn()) {
 
 date_default_timezone_set('Asia/Manila');
 
-// Ensure user has an associated employee record
 $userEmail = $_SESSION['user_email'];
 $stmt = $conn->prepare("SELECT id, first_name, last_name, position FROM employees WHERE email = ? OR employee_code = ?");
 $stmt->bind_param("ss", $userEmail, $userEmail);
@@ -26,7 +24,6 @@ if ($employeeResult->num_rows === 0) {
     $emp_name = $employee['first_name'] . ' ' . $employee['last_name'];
     $emp_position = $employee['position'];
 
-    // Check today's attendance status
     $dateToday = date('Y-m-d');
     $checkStmt = $conn->prepare("SELECT * FROM attendance WHERE employee_id = ? AND attendance_date = ?");
     $checkStmt->bind_param("is", $emp_id, $dateToday);

@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $end_date    = $_POST['end_date'];
     $reason      = $_POST['reason'] ?? '';
 
-    // Basic validation
     if (empty($employee_id) || empty($leave_type) || empty($start_date) || empty($end_date)) {
         $_SESSION['error'] = "All required fields are required.";
         header("Location: ../pages/appointment.php");
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Check overlapping leave requests that are still Pending or Approved
     $check_stmt = $conn->prepare("
         SELECT id, start_date, end_date, status
         FROM leave_requests
@@ -64,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Insert leave request
     $stmt = $conn->prepare("
         INSERT INTO leave_requests 
         (employee_id, leave_type, start_date, end_date, reason, created_at, updated_at) 
@@ -89,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-// Handle approval/rejection
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
     $id = (int) $_GET['id'];

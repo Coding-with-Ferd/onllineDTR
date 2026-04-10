@@ -2,13 +2,11 @@
 require_once '../config/session.php';
 require_once '../auth/db_connect.php';
 
-// Block access if not logged in
 if (!isLoggedIn()) {
     header('Location: ../auth/signin.php');
     exit();
 }
 
-// Check for expired leaves and update employee status back to active
 $today = date('Y-m-d');
 $expired_leaves = $conn->query("
     SELECT lr.employee_id
@@ -26,7 +24,6 @@ while ($leave = $expired_leaves->fetch_assoc()) {
     $conn->query("UPDATE employees SET status = 'active', updated_at = NOW() WHERE id = " . $leave['employee_id']);
 }
 
-// Fetch all leave requests with employee details
 $query = $conn->query("
     SELECT lr.*, e.first_name, e.last_name, e.employee_code,
            approver.first_name as approver_first, approver.last_name as approver_last
@@ -37,7 +34,6 @@ $query = $conn->query("
 ");
 $leave_requests = $query->fetch_all(MYSQLI_ASSOC);
 
-// Get leave statistics
 $stats = $conn->query("
     SELECT
         COUNT(*) as total_requests,
@@ -47,7 +43,6 @@ $stats = $conn->query("
     FROM leave_requests
 ")->fetch_assoc();
 
-// Get employees for dropdown
 $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM employees WHERE status = 'active' ORDER BY last_name ASC");
 ?>
 
@@ -208,7 +203,7 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                                 <select name="employee_id" required>
                                     <option value="">Select Employee</option>
                                     <?php
-                                    $employees->data_seek(0); // Reset result pointer
+                                    $employees->data_seek(0); 
                                     while ($emp = $employees->fetch_assoc()):
                                     ?>
                                         <option value="<?php echo $emp['id']; ?>">
@@ -276,7 +271,6 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
             const closeBtn = modal.querySelector(".close");
             const cancelBtn = modal.querySelector(".close-btn");
 
-            // Initialize date pickers
             const startPicker = flatpickr("#startDatePicker", {
                 altInput: true,
                 altFormat: "F j, Y",
@@ -307,7 +301,6 @@ $employees = $conn->query("SELECT id, first_name, last_name, employee_code FROM 
                 }
             });
 
-            // Link date pickers so end date can't be before start date
             startPicker.config.onChange.push(function(selectedDates, dateStr) {
                 endPicker.set('minDate', dateStr);
             });

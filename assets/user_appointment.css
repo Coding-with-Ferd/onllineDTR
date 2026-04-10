@@ -399,6 +399,12 @@ body {
     border-color: rgba(245, 158, 11, 0.16);
 }
 
+.badge-canceled {
+    background: rgba(107, 114, 128, 0.08);
+    color: #374151;
+    border-color: rgba(107, 114, 128, 0.12);
+}
+
 /* Actions */
 .btn-action {
     display: inline-block;
@@ -412,8 +418,9 @@ body {
     white-space: nowrap;
 }
 
-.btn-action.delete {
+.btn-action.cancel {
     background: #374151;
+    margin-right: 10px;
 }
 
 .btn-action:hover {

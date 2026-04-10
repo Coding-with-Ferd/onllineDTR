@@ -21,7 +21,6 @@
     margin-top: 4px;
 }
 
-/* Table Container styling */
 .employee-table {
     width: 100%;
     border-collapse: separate;
@@ -83,7 +82,6 @@
     box-shadow: 0 6px 12px rgba(26, 109, 24, 0.2);
 }
 
-/* Table Action Buttons */
 .table-action a {
     padding: 6px 12px;
     border-radius: 6px;
@@ -115,7 +113,6 @@
     color: #c53030;
 }
 
-/* Card Wrapper */
 .content-card {
     background: white;
     padding: 30px;
@@ -130,7 +127,6 @@
     margin-bottom: 25px;
 }
 
-/* User Cell Styling */
 .user-cell {
     display: flex;
     align-items: center;
@@ -166,7 +162,6 @@
     color: #a0aec0;
 }
 
-/* Contact & Tags */
 .contact-cell {
     display: flex;
     flex-direction: column;
@@ -187,7 +182,6 @@
     border-radius: 4px;
 }
 
-/* Modern Status Pills */
 .status-pill {
     padding: 4px 12px;
     border-radius: 20px;
@@ -210,7 +204,6 @@
     color: #b8900e;
 }
 
-/* Table Action Icons */
 .table-action {
     white-space: nowrap;
 }

@@ -9,7 +9,7 @@ if (!isLoggedIn()) {
 
 date_default_timezone_set('Asia/Manila');
 
-/* -------------------- POST: ADD / UPDATE BRANCH -------------------- */
+/* ADD / UPDATE BRANCH */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action      = $_POST['action'] ?? '';
     $branch_id   = (int) ($_POST['branch_id'] ?? 0);
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-/* -------------------- GET: FETCH BRANCH DATA -------------------- */
+/* FETCH BRANCH DATA */
 $today = date('Y-m-d');
 
 $sql = "

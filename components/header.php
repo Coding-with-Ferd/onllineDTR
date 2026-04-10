@@ -25,9 +25,7 @@
         document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
     }
 
-    // Update immediately
     updateDateTime();
-    // Update every second
     setInterval(updateDateTime, 1000);
 </script>
 

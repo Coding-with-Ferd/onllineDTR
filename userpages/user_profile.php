@@ -2,7 +2,6 @@
 require_once '../config/session.php';
 include '../auth/db_connect.php';
 
-// Check if user is logged in and is an employee
 if (!isLoggedIn() || !isEmployee()) {
     header("Location: ../auth/signin.php");
     exit;
@@ -15,7 +14,6 @@ $today = date('Y-m-d');
 
 // Handle Photo Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
-    // Fetch employee id first
     $stmt = $conn->prepare("SELECT id FROM employees WHERE employee_code = ?");
     $stmt->bind_param("s", $employee_code);
     $stmt->execute();
@@ -60,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
         $uploadDir = __DIR__ . '/../assets/uploads';
     }
 
-    // Delete old photo if exists
+    // Delete old photo
     $oldPhotoStmt = $conn->prepare("SELECT photo FROM employees WHERE id = ?");
     $oldPhotoStmt->bind_param("i", $id);
     $oldPhotoStmt->execute();
@@ -104,29 +102,25 @@ if (!$emp) {
 
 $id = $emp['id'];
 
-// Pagination & Date Filter Logic
+// Pagination 
 $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Capture filter dates
 $start_date = isset($_GET['start_date']) && !empty($_GET['start_date']) ? $_GET['start_date'] : null;
 $end_date = isset($_GET['end_date']) && !empty($_GET['end_date']) ? $_GET['end_date'] : null;
 
-// Build the dynamic WHERE clause for filtering
 $filter_sql = "";
 if ($start_date && $end_date) {
     $filter_sql = " AND attendance_date BETWEEN '$start_date' AND '$end_date' ";
 }
 
-// Fetch Attendance History
 $sql_history = "SELECT * FROM attendance WHERE employee_id = ? $filter_sql ORDER BY attendance_date DESC LIMIT ? OFFSET ?";
 $stmt_history = $conn->prepare($sql_history);
 $stmt_history->bind_param("iii", $id, $limit, $offset);
 $stmt_history->execute();
 $attendance_history = $stmt_history->get_result();
 
-// Calculate Total Pages
 $sql_total = "SELECT COUNT(*) as total FROM attendance WHERE employee_id = ? $filter_sql";
 $total_stmt = $conn->prepare($sql_total);
 $total_stmt->bind_param("i", $id);
@@ -134,7 +128,6 @@ $total_stmt->execute();
 $total_rows = $total_stmt->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 
-// Helper to format time
 if (!function_exists('formatTime')) {
     function formatTime($time)
     {
@@ -308,7 +301,6 @@ if (!function_exists('formatTime')) {
 
                         <div class="pagination">
                             <?php
-                            // Build query string for pagination links so filter stays active
                             $query_str = "&start_date=" . ($_GET['start_date'] ?? '') . "&end_date=" . ($_GET['end_date'] ?? '');
                             ?>
 

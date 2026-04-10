@@ -47,7 +47,7 @@ if (file_exists($logoPath)) {
     $drawing = new Drawing();
     $drawing->setPath($logoPath);
 
-    // Adjust size (important)
+    // Adjust size
     $drawing->setHeight(120);
 
     // Position
@@ -248,15 +248,21 @@ $sheet->getStyle("A{$rowNum}")->applyFromArray([
     ]
 ]);
 
-// Space before signature section
 $rowNum += 3;
 
 // Row 1: names with top border
 $sheet->mergeCells("B{$rowNum}:D{$rowNum}");
 $sheet->mergeCells("H{$rowNum}:H{$rowNum}");
 
-$sheet->setCellValue("B{$rowNum}", strtoupper($emp['last_name'] . ', ' . $emp['first_name']));
-$sheet->setCellValue("H{$rowNum}", 'LEONIDO ESGUERRA'); 
+$middleInitial = !empty($emp['middle_name']) 
+    ? strtoupper(substr($emp['middle_name'], 0, 1)) . '.' 
+    : '';
+
+$sheet->setCellValue(
+    "B{$rowNum}",
+    strtoupper($emp['last_name'] . ', ' . $emp['first_name'] . ' ' . $middleInitial)
+);
+$sheet->setCellValue("H{$rowNum}", 'MALLORCA - BUALAT, JOHANNA MERYL H.'); 
 
 $sheet->getStyle("B{$rowNum}:D{$rowNum}")->applyFromArray([
     'alignment' => [

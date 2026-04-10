@@ -2,7 +2,6 @@
 require_once '../config/session.php';
 require_once '../auth/db_connect.php';
 
-// Block access if not logged in
 if (!isLoggedIn()) {
     header('Location: ../auth/signin.php');
     exit();
@@ -13,7 +12,6 @@ date_default_timezone_set('Asia/Manila');
 $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
 $year  = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
 
-// Basic guard
 if ($month < 1 || $month > 12) {
     $month = (int)date('n');
 }

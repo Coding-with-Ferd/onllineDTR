@@ -4,7 +4,6 @@ include '../auth/db_connect.php';
 
 date_default_timezone_set('Asia/Manila');
 
-// Optional: block access if not logged in
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -22,7 +21,6 @@ function totalHours($time_in, $time_out, $status = 'Present')
 {
     $status = strtolower(trim($status));
 
-    // No working hours for these statuses
     if (in_array($status, ['absent', 'holiday', 'snw holiday', 'leave'])) {
         return 0;
     }
@@ -45,14 +43,11 @@ function totalHours($time_in, $time_out, $status = 'Present')
 // Filename
 $filename = 'attendance_records_' . date('Y-m-d_H-i-s') . '.csv';
 
-// Headers for Excel-compatible CSV download
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=' . $filename);
 
-// Open output stream
 $output = fopen('php://output', 'w');
 
-// Column headers
 fputcsv($output, [
     'Employee Code',
     'Employee Name',

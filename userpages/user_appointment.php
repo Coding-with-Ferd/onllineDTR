@@ -2,13 +2,11 @@
 require_once '../config/session.php';
 require_once '../auth/db_connect.php';
 
-// Block access if not logged in
 if (!isLoggedIn()) {
     header('Location: ../auth/signin.php');
     exit();
 }
 
-// Ensure user has an associated employee record
 $userEmail = $_SESSION['user_email'];
 $stmt = $conn->prepare("SELECT id, first_name, last_name, position FROM employees WHERE email = ? OR employee_code = ?");
 $stmt->bind_param("ss", $userEmail, $userEmail);
@@ -24,7 +22,6 @@ $emp_id = $employee['id'];
 $emp_name = $employee['first_name'] . ' ' . $employee['last_name'];
 $emp_position = $employee['position'];
 
-// Fetch user's leave requests
 $query = $conn->query("
     SELECT lr.*, e.first_name, e.last_name,
            approver.first_name as approver_first, approver.last_name as approver_last
@@ -36,7 +33,6 @@ $query = $conn->query("
 ");
 $leave_requests = $query->fetch_all(MYSQLI_ASSOC);
 
-// Get user's leave statistics
 $stats = $conn->query("
     SELECT
         COUNT(*) as total_requests,
@@ -125,7 +121,10 @@ $stats = $conn->query("
                                         <td><?php echo date('M d, Y', strtotime($leave['created_at'])); ?></td>
                                         <td style="text-align:right;">
                                             <?php if ($leave['status'] === 'Pending'): ?>
-                                                <a href="../backend/user_leave.php?delete=<?php echo $leave['id']; ?>" class="btn-action delete" title="Cancel Request" onclick="return confirm('Cancel this leave request?')">
+                                                <a href="#"
+                                                    class="btn-action cancel"
+                                                    title="Cancel Request"
+                                                    onclick="confirmCancel(<?php echo $leave['id']; ?>)">
                                                     <i class="bi bi-x-circle"></i>
                                                 </a>
                                             <?php endif; ?>
@@ -195,9 +194,9 @@ $stats = $conn->query("
             </div>
         </div>
     </div>
-    <?php include '../components/notif.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <?php include '../components/notif.php'; ?>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("leaveModal");
@@ -205,7 +204,6 @@ $stats = $conn->query("
             const closeBtn = modal.querySelector(".close");
             const cancelBtn = modal.querySelector(".close-btn");
 
-            // Initialize date pickers
             const startPicker = flatpickr("#startDatePicker", {
                 altInput: true,
                 altFormat: "F j, Y",
@@ -235,7 +233,6 @@ $stats = $conn->query("
                 }
             });
 
-            // Link date pickers so end date can't be before start date
             startPicker.config.onChange.push(function(selectedDates, dateStr) {
                 endPicker.set('minDate', dateStr);
             });
@@ -279,6 +276,22 @@ $stats = $conn->query("
             const modal = document.getElementById("reasonModal");
             modal.classList.remove("show");
             setTimeout(() => modal.style.display = "none", 300);
+        }
+
+        function confirmCancel(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to cancel this leave request?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1a6d18',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "../backend/user_leave.php?cancel=" + id;
+                }
+            });
         }
     </script>
 </body>

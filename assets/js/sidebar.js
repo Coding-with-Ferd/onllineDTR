@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.querySelector('#sidebar');
     const toggleBtn = document.querySelector('#toggleBtn');
 
-    // 1. Sidebar Toggle Logic
+    // Sidebar Toggle Logic
     if (localStorage.getItem('sidebarState') === 'collapsed') {
         sidebar.classList.add('collapsed');
     }
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
     });
 
-    // 2. Active Link Logic
+    // Active Link Logic
     const sidebarLinks = document.querySelectorAll('.sidebar nav a');
     const currentPage = window.location.pathname.split("/").pop();
 

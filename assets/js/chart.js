@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const ctx = canvas.getContext('2d');
 
-            // --- GRADIANT DEFINITIONS ---
             const greenGrad = ctx.createLinearGradient(0, 0, 0, 400);
             greenGrad.addColorStop(0, 'rgba(26, 109, 24, 0.25)'); 
             greenGrad.addColorStop(1, 'rgba(26, 109, 24, 0)');

@@ -33,10 +33,8 @@ document.getElementById('login-form').addEventListener('submit', function (e) {
 
         if (data.status === 'success') {
             if (data.redirect) {
-                // Instantly redirect if the user is an Employee (skips OTP)
                 window.location.href = data.redirect;
             } else {
-                // Otherwise show OTP section (Admin)
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('otp-section').style.display = 'block';
                 startTimer(60);

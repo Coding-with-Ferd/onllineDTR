@@ -225,6 +225,43 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     exit;
 }
 
+// Cancel leave request
+if (isset($_GET['cancel'])) {
+    $id = (int) $_GET['cancel'];
+
+    $stmt = $conn->prepare("
+        UPDATE leave_requests
+        SET status = 'Canceled', updated_at = NOW()
+        WHERE id = ?
+          AND TRIM(LOWER(status)) = 'pending'
+    ");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+        $_SESSION['notif'] = [
+            'message' => 'Leave request canceled successfully.',
+            'icon' => 'success'
+        ];
+    } else {
+        // Debug: show real current status from DB
+        $check = $conn->prepare("SELECT id, employee_id, status FROM leave_requests WHERE id = ?");
+        $check->bind_param("i", $id);
+        $check->execute();
+        $res = $check->get_result();
+        $row = $res->fetch_assoc();
+
+        $_SESSION['notif'] = [
+            'message' => $row
+                ? "Cannot cancel. DB says status is [" . $row['status'] . "] for leave ID " . $row['id']
+                : "Leave request not found for ID " . $id,
+            'icon' => 'warning'
+        ];
+    }
+
+    header("Location: $redirectPage");
+    exit;
+}
 
 // Delete leave request
 if (isset($_GET['delete'])) {

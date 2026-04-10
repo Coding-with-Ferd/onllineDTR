@@ -69,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Redirect back to profile
     header("Location: ../pages/profile.php?id=" . $emp_id);
     exit;
 } else {

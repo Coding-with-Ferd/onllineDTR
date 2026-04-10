@@ -2,7 +2,6 @@
 require_once '../config/session.php';
 include '../auth/db_connect.php';
 
-// Get and Validate Employee ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: employees.php");
     exit;
@@ -52,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
         mkdir($uploadDir, 0755, true);
     }
 
-    // Delete old photo if exists
     $oldPhotoStmt = $conn->prepare("SELECT photo FROM employees WHERE id = ?");
     $oldPhotoStmt->bind_param("i", $id);
     $oldPhotoStmt->execute();
@@ -94,29 +92,24 @@ if (!$emp) {
     exit;
 }
 
-// Pagination & Date Filter Logic (Updated)
 $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Capture filter dates
 $start_date = isset($_GET['start_date']) && !empty($_GET['start_date']) ? $_GET['start_date'] : null;
 $end_date = isset($_GET['end_date']) && !empty($_GET['end_date']) ? $_GET['end_date'] : null;
 
-// Build the dynamic WHERE clause for filtering
 $filter_sql = "";
 if ($start_date && $end_date) {
     $filter_sql = " AND attendance_date BETWEEN '$start_date' AND '$end_date' ";
 }
 
-// Fetch Attendance History (Modified to include filters)
 $sql_history = "SELECT * FROM attendance WHERE employee_id = ? $filter_sql ORDER BY attendance_date DESC LIMIT ? OFFSET ?";
 $stmt_history = $conn->prepare($sql_history);
 $stmt_history->bind_param("iii", $id, $limit, $offset);
 $stmt_history->execute();
 $attendance_history = $stmt_history->get_result();
 
-// Calculate Total Pages (Modified to include filters)
 $sql_total = "SELECT COUNT(*) as total FROM attendance WHERE employee_id = ? $filter_sql";
 $total_stmt = $conn->prepare($sql_total);
 $total_stmt->bind_param("i", $id);
@@ -124,13 +117,11 @@ $total_stmt->execute();
 $total_rows = $total_stmt->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 
-// Fetch Today's Attendance (For the Time In/Out buttons)
 $stmt_today = $conn->prepare("SELECT * FROM attendance WHERE employee_id = ? AND attendance_date = ?");
 $stmt_today->bind_param("is", $id, $today);
 $stmt_today->execute();
 $attendance = $stmt_today->get_result()->fetch_assoc();
  
-// Check if Employee already has a user account generated
 $hasUserAccount = false;
 if (isset($emp['employee_code'])) {
     $emp_code = $emp['employee_code'];
@@ -142,7 +133,6 @@ if (isset($emp['employee_code'])) {
     }
 }
 
-// Helper to format time
 if (!function_exists('formatTime')) {
     function formatTime($time)
     {

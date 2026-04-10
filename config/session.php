@@ -80,7 +80,6 @@ function requireRole($roles)
     }
 }
 
-// Regenerate ID every 30 min
 if (isset($_SESSION['logged_in_time']) && time() - $_SESSION['logged_in_time'] > 1800) {
     session_regenerate_id(true);
     $_SESSION['logged_in_time'] = time();

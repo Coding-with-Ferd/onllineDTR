@@ -3,7 +3,6 @@
     background: #f8fafc;
 }
 
-/* Container for the cards */
 .dashboard-cards {
     display: flex;
     gap: 24px;
@@ -22,7 +21,6 @@
     margin-top: 4px;
 }
 
-/* Modern Card Design */
 .card {
     background: #ffffff;
     padding: 24px;
@@ -39,7 +37,6 @@
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Card Titles */
 .card h3 {
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -60,7 +57,6 @@
     color: #e53e3e; 
 }
 
-/* Chart Container */
 .chart-container {
     margin-top: 80px;
     background: #ffffff;

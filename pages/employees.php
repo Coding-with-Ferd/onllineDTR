@@ -1,7 +1,6 @@
 <?php
 require_once '../config/session.php';
 
-// Block access if not logged in
 if (!isLoggedIn()) {
     header('Location: ../auth/signin.php');
     exit();
@@ -303,7 +302,6 @@ $branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_n
             const editCancelBtn = editModal.querySelector(".close-btn");
             const editButtons = document.querySelectorAll(".edit-btn");
 
-            // Initialize flatpickr for edit date picker
             flatpickr("#editDatePicker", {
                 altInput: true,
                 altFormat: "F j, Y",
@@ -331,7 +329,6 @@ $branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_n
                 btn.addEventListener("click", function(e) {
                     e.preventDefault();
 
-                    // Get employee data from data attributes
                     const employeeId = this.dataset.id;
                     const firstName = this.dataset.firstName;
                     const middleName = this.dataset.middleName;
@@ -344,7 +341,6 @@ $branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_n
                     const hireDate = this.dataset.hireDate;
                     const status = this.dataset.status;
 
-                    // Populate form fields
                     document.getElementById("employeeId").value = employeeId;
                     document.getElementById("editFirstName").value = firstName;
                     document.getElementById("editMiddleName").value = middleName;
