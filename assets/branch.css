@@ -3,9 +3,14 @@
     background-color: var(--bg-light);
 }
 
+.branch-scroll {
+    height: 700px;  
+    overflow-y: auto;
+}
+
 .branch-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 25px;
     margin-top: 25px;
 }
@@ -136,9 +141,13 @@ input:checked+.slider:before {
 }
 
 .btn-add-branch {
-    background: #1a7318;
+    background: #2fa45b;
     color: #fff;
     padding: 12px 18px;
+}
+
+.btn-add-branch:hover {
+    background: #1f7a3e;
 }
 
 .btn-edit-branch {
@@ -242,4 +251,18 @@ input:checked+.slider:before {
 
 .branch-footer i {
     color: #1a7318;
+}
+
+.btn-delete-branch {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-delete-branch:hover {
+    background: #fecaca;
 }

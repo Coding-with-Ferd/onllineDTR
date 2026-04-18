@@ -9,8 +9,9 @@ if (!isLoggedIn()) {
 
 date_default_timezone_set('Asia/Manila');
 
-/* ADD / UPDATE BRANCH */
+/* ADD / UPDATE / DELETE BRANCH */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $action      = $_POST['action'] ?? '';
     $branch_id   = (int) ($_POST['branch_id'] ?? 0);
     $branch_name = trim($_POST['branch_name'] ?? '');
@@ -19,8 +20,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $close_time  = $_POST['close_time'] ?? '18:00';
     $is_open     = isset($_POST['is_open']) ? (int) $_POST['is_open'] : 1;
 
-    if ($branch_name !== '') {
-        if ($action === 'update' && $branch_id > 0) {
+    /* DELETE */
+    if ($action === 'delete' && $branch_id > 0) {
+
+        $check = $conn->prepare("SELECT COUNT(*) as total FROM employees WHERE branch_id = ?");
+        $check->bind_param("i", $branch_id);
+        $check->execute();
+        $result = $check->get_result()->fetch_assoc();
+
+        if ($result['total'] > 0) {
+            $_SESSION['notif'] = [
+                'icon' => 'warning',
+                'message' => 'Cannot delete branch with existing employees.'
+            ];
+        } else {
+
+            $stmt = $conn->prepare("DELETE FROM branches WHERE id = ?");
+            $stmt->bind_param("i", $branch_id);
+
+            if ($stmt->execute()) {
+                $_SESSION['notif'] = [
+                    'icon' => 'success',
+                    'message' => 'Branch deleted successfully.'
+                ];
+            } else {
+                $_SESSION['notif'] = [
+                    'icon' => 'error',
+                    'message' => 'Failed to delete branch.'
+                ];
+            }
+        }
+
+        /* UPDATE */
+    } elseif ($action === 'update' && $branch_id > 0) {
+
+        if ($branch_name !== '') {
             $stmt = $conn->prepare("
                 UPDATE branches
                 SET branch_name = ?, address = ?, open_time = ?, close_time = ?, is_open = ?, updated_at = NOW()
@@ -29,11 +63,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ssssii", $branch_name, $address, $open_time, $close_time, $is_open, $branch_id);
 
             if ($stmt->execute()) {
-                $_SESSION['success'] = "Branch updated successfully.";
+                $_SESSION['notif'] = [
+                    'icon' => 'success',
+                    'message' => 'Branch updated successfully.'
+                ];
             } else {
-                $_SESSION['error'] = "Failed to update branch.";
+                $_SESSION['notif'] = [
+                    'icon' => 'error',
+                    'message' => 'Failed to update branch.'
+                ];
             }
         } else {
+            $_SESSION['notif'] = [
+                'icon' => 'warning',
+                'message' => 'Branch name is required.'
+            ];
+        }
+
+        /* ADD */
+    } elseif ($action === 'add' || $action === '') {
+
+        if ($branch_name !== '') {
             $stmt = $conn->prepare("
                 INSERT INTO branches (branch_name, address, open_time, close_time, is_open, created_at, updated_at)
                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())
@@ -41,13 +91,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ssssi", $branch_name, $address, $open_time, $close_time, $is_open);
 
             if ($stmt->execute()) {
-                $_SESSION['success'] = "Branch added successfully.";
+                $_SESSION['notif'] = [
+                    'icon' => 'success',
+                    'message' => 'Branch added successfully.'
+                ];
             } else {
-                $_SESSION['error'] = "Failed to add branch.";
+                $_SESSION['notif'] = [
+                    'icon' => 'error',
+                    'message' => 'Failed to add branch.'
+                ];
             }
+        } else {
+            $_SESSION['notif'] = [
+                'icon' => 'warning',
+                'message' => 'Branch name is required.'
+            ];
         }
-    } else {
-        $_SESSION['error'] = "Branch name is required.";
     }
 
     header("Location: ../pages/branch_status.php");
@@ -96,4 +155,3 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("sss", $today, $today, $today);
 $stmt->execute();
 $branches = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-?>

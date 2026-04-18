@@ -77,6 +77,9 @@
     padding-right: 10px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02);
+
+    max-height: 680px;
+    overflow-y: auto;
 }
 
 .calendar-grid {
@@ -163,12 +166,6 @@
 
 .dot-absent {
     background: #ef4444;
-}
-
-.calendar-scroll {
-    max-height: 680px;
-    overflow-y: auto;
-    padding-right: 20px;
 }
 
 .calendar-scroll::-webkit-scrollbar {

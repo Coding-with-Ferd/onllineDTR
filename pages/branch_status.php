@@ -43,68 +43,85 @@ include '../backend/branch.php';
                     </button>
                 </div>
 
-                <div class="branch-grid">
-                    <?php if (!empty($branches)): ?>
-                        <?php foreach ($branches as $branch): ?>
-                            <?php
-                            $statusClass = !empty($branch['is_open']) ? 'status-open' : 'status-closed';
-                            $statusText  = !empty($branch['is_open']) ? 'Open' : 'Closed';
-                            ?>
-                            <div class="branch-card">
-                                <div class="branch-header">
-                                    <div class="branch-info">
-                                        <h3><?= htmlspecialchars($branch['branch_name']) ?></h3>
-                                        <p>
-                                            <i class="bi bi-clock"></i>
-                                            <?= date('g:i A', strtotime($branch['open_time'])) ?>
-                                            -
-                                            <?= date('g:i A', strtotime($branch['close_time'])) ?>
-                                        </p>
+                <div class="branch-scroll">
+                    <div class="branch-grid">
+                        <?php if (!empty($branches)): ?>
+                            <?php foreach ($branches as $branch): ?>
+                                <?php
+                                $statusClass = !empty($branch['is_open']) ? 'status-open' : 'status-closed';
+                                $statusText  = !empty($branch['is_open']) ? 'Open' : 'Closed';
+                                ?>
+                                <div class="branch-card">
+                                    <div class="branch-header">
+                                        <div class="branch-info">
+                                            <h3><?= htmlspecialchars($branch['branch_name']) ?></h3>
+                                            <p>
+                                                <i class="bi bi-clock"></i>
+                                                <?= date('g:i A', strtotime($branch['open_time'])) ?>
+                                                -
+                                                <?= date('g:i A', strtotime($branch['close_time'])) ?>
+                                            </p>
+                                        </div>
+
+                                        <div style="display:flex; gap:8px; align-items:center;">
+
+                                            <!-- EDIT -->
+                                            <button type="button"
+                                                class="btn-edit-branch"
+                                                onclick="openEditBranchModal(
+                                                    '<?= $branch['id'] ?>',
+                                                    '<?= htmlspecialchars(addslashes($branch['branch_name'])) ?>',
+                                                    '<?= htmlspecialchars(addslashes($branch['address'])) ?>',
+                                                    '<?= substr($branch['open_time'], 0, 5) ?>',
+                                                    '<?= substr($branch['close_time'], 0, 5) ?>',
+                                                    '<?= $branch['is_open'] ?>'
+                                                )">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+
+                                            <!-- DELETE -->
+                                            <form method="POST" action="../backend/branch.php" class="delete-form" style="display:inline;">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="branch_id" value="<?= $branch['id'] ?>">
+
+                                                <button type="button" class="btn-delete-branch" onclick="confirmDelete(this)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+
+                                            <!-- STATUS -->
+                                            <span class="status-indicator <?= $statusClass ?>"><?= $statusText ?></span>
+
+                                        </div>
                                     </div>
 
-                                    <div style="display:flex; gap:8px; align-items:center;">
-                                        <button type="button"
-                                            class="btn-edit-branch"
-                                            onclick="openEditBranchModal(
-                                '<?= $branch['id'] ?>',
-                                '<?= htmlspecialchars(addslashes($branch['branch_name'])) ?>',
-                                '<?= htmlspecialchars(addslashes($branch['address'])) ?>',
-                                '<?= substr($branch['open_time'], 0, 5) ?>',
-                                '<?= substr($branch['close_time'], 0, 5) ?>',
-                                '<?= $branch['is_open'] ?>'
-                            )">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-                                        <span class="status-indicator <?= $statusClass ?>"><?= $statusText ?></span>
+                                    <div class="branch-metrics">
+                                        <div class="metric-item">
+                                            <span class="metric-value"><?= str_pad((string)$branch['staff_on_duty'], 2, '0', STR_PAD_LEFT) ?></span>
+                                            <span class="metric-label">Staff On Duty</span>
+                                        </div>
+
+                                        <div class="metric-item" style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                                            <span class="metric-value"><?= str_pad((string)$branch['absent_today'], 2, '0', STR_PAD_LEFT) ?></span>
+                                            <span class="metric-label">Absent Today</span>
+                                        </div>
+
+                                        <div class="metric-item">
+                                            <span class="metric-value"><?= str_pad((string)$branch['on_leave'], 2, '0', STR_PAD_LEFT) ?></span>
+                                            <span class="metric-label">On Leave</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="branch-footer">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span><?= htmlspecialchars($branch['address'] ?? 'No address available') ?></span>
                                     </div>
                                 </div>
-
-                                <div class="branch-metrics">
-                                    <div class="metric-item">
-                                        <span class="metric-value"><?= str_pad((string)$branch['staff_on_duty'], 2, '0', STR_PAD_LEFT) ?></span>
-                                        <span class="metric-label">Staff On Duty</span>
-                                    </div>
-
-                                    <div class="metric-item" style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
-                                        <span class="metric-value"><?= str_pad((string)$branch['absent_today'], 2, '0', STR_PAD_LEFT) ?></span>
-                                        <span class="metric-label">Absent Today</span>
-                                    </div>
-
-                                    <div class="metric-item">
-                                        <span class="metric-value"><?= str_pad((string)$branch['on_leave'], 2, '0', STR_PAD_LEFT) ?></span>
-                                        <span class="metric-label">On Leave</span>
-                                    </div>
-                                </div>
-
-                                <div class="branch-footer">
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    <span><?= htmlspecialchars($branch['address'] ?? 'No address available') ?></span>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No branches found.</p>
-                    <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No branches found.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div id="addBranchModal" class="modal-overlay">
@@ -115,6 +132,7 @@ include '../backend/branch.php';
                         </div>
 
                         <form action="../backend/branch.php" method="POST">
+                            <input type="hidden" name="action" value="add">
                             <div class="modal-form-group">
                                 <label>Branch Name</label>
                                 <input type="text" name="branch_name" required>
@@ -202,8 +220,27 @@ include '../backend/branch.php';
             </div>
         </div>
     </div>
+    <?php include '../components/notif.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/sidebar.js"></script>
     <script src="../assets/js/branch.js"></script>
+    <script>
+        function confirmDelete(btn) {
+            Swal.fire({
+                title: "Delete Branch?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1a7318",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btn.closest("form").submit();
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

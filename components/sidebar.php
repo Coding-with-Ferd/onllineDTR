@@ -51,7 +51,7 @@ $display_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest'
                     <?php if ($photo && file_exists($photo)): ?>
                         <img src="<?= htmlspecialchars($photo) ?>" class="profile-img">
                     <?php else: ?>
-                        <i class="bi bi-person-circle"></i>
+                        <img src="../assets/images/default-avatar.jpg" class="profile-img">
                     <?php endif; ?>
                 </div>
                 <span class="user-name">

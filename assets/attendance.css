@@ -70,7 +70,7 @@
 
 /* Buttons */
 .btn-view {
-    background: #1a7318;
+    background: #3b82f6;
     margin-top: 5px;
     color: white;
     border: none;
@@ -81,8 +81,12 @@
     cursor: pointer;
 }
 
+.btn-view:hover {
+    background: #2563eb;
+}
+
 .btn-excel {
-    background: #1d6f42;
+    background: #1f7a3e;
     margin-bottom: 14px;
     color: white;
     border: none;
@@ -314,7 +318,7 @@
 
 /* Add Attendance Button */
 .btn-add-attendance {
-    background: #1a7318;
+    background: #2fa45b;
     color: white;
     border: none;
     margin-bottom: 14px;
@@ -329,7 +333,7 @@
     transition: 0.2s;
 }
 
-.btn-add-attendance:hover { background: #145a12; }
+.btn-add-attendance:hover { background: #1f7a3e; }
 
 /* Modal Overlay */
 .modal-overlay {

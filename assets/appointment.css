@@ -23,7 +23,7 @@
 }
 
 .btn-add-appointment {
-    background: #1a7318;
+    background: #2fa45b;
     color: white;
     border: none;
     padding: 12px 20px;
@@ -38,7 +38,7 @@
 }
 
 .btn-add-appointment:hover {
-    background: #166534;
+    background: #1f7a3e;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(26, 115, 24, 0.3);
 }

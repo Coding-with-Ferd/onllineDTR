@@ -65,7 +65,6 @@ $branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_n
 
             <!-- Main content -->
             <div class="main-layer">
-                <div class="content">
                     <div class="employee-header">
                         <div class="employee-text">
                             <h1>Employees</h1>
@@ -73,79 +72,78 @@ $branches = $conn->query("SELECT id, branch_name FROM branches ORDER BY branch_n
                         </div>
                         <a href="add_employee.php" class="add-btn"><i class="bi bi-plus-lg"></i> Add Employee</a>
                     </div>
-
-                    <table class="employee-table">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Position</th>
-                                <th>Type</th>
-                                <th>Contact Info</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (count($employees) > 0): ?>
-                                <?php foreach ($employees as $emp): ?>
-                                    <tr>
-                                        <td>
-                                            <div class="user-cell">
-                                                <div class="user-avatar"><?= strtoupper(substr($emp['first_name'], 0, 1)) ?></div>
-                                                <div class="user-details">
-                                                    <a href="profile.php?id=<?= $emp['id'] ?>" class="user-employee">
-                                                        <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
-                                                    </a>
-                                                    <span class="user-code"><?= htmlspecialchars($emp['employee_code']) ?></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><?= htmlspecialchars($emp['position']) ?></td>
-                                        <td><span class="type-tag"><?= ucfirst($emp['position_type']) ?></span></td>
-                                        <td>
-                                            <div class="contact-cell">
-                                                <span style="text-transform: lowercase;"><i class="bi bi-envelope"></i> <?= htmlspecialchars($emp['email']) ?></span>
-                                                <span><i class="bi bi-telephone"></i> <?= htmlspecialchars($emp['phone']) ?></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="status-pill <?= str_replace(' ', '-', strtolower($emp['status'])) ?>">
-                                                <?= ucfirst($emp['status']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="table-action">
-                                            <button
-                                                type="button"
-                                                class="edit-icon edit-btn"
-                                                data-id="<?= $emp['id'] ?>"
-                                                data-first-name="<?= htmlspecialchars($emp['first_name']) ?>"
-                                                data-middle-name="<?= htmlspecialchars($emp['middle_name']) ?>"
-                                                data-last-name="<?= htmlspecialchars($emp['last_name']) ?>"
-                                                data-position="<?= htmlspecialchars($emp['position']) ?>"
-                                                data-position-type="<?= $emp['position_type'] ?>"
-                                                data-email="<?= htmlspecialchars($emp['email']) ?>"
-                                                data-phone="<?= htmlspecialchars($emp['phone']) ?>"
-                                                data-hire-date="<?= $emp['hire_date'] ?>"
-                                                data-branch-id="<?= htmlspecialchars($emp['branch_id'] ?? '') ?>"
-                                                data-status="<?= $emp['status'] ?>"
-                                                title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete-icon delete-confirm" title="Delete"><i class="bi bi-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
+                    <div class="table-container">
+                        <table class="employee-table">
+                            <thead>
                                 <tr>
-                                    <td colspan="6" class="empty-state">No employees found.</td>
+                                    <th>Employee</th>
+                                    <th>Position</th>
+                                    <th>Type</th>
+                                    <th>Contact Info</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-
+                            </thead>
+                            <tbody>
+                                <?php if (count($employees) > 0): ?>
+                                    <?php foreach ($employees as $emp): ?>
+                                        <tr>
+                                            <td>
+                                                <div class="user-cell">
+                                                    <div class="user-avatar"><?= strtoupper(substr($emp['first_name'], 0, 1)) ?></div>
+                                                    <div class="user-details">
+                                                        <a href="profile.php?id=<?= $emp['id'] ?>" class="user-employee">
+                                                            <?= htmlspecialchars($emp['first_name'] . ' ' . $emp['last_name']) ?>
+                                                        </a>
+                                                        <span class="user-code"><?= htmlspecialchars($emp['employee_code']) ?></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><?= htmlspecialchars($emp['position']) ?></td>
+                                            <td><span class="type-tag"><?= ucfirst($emp['position_type']) ?></span></td>
+                                            <td>
+                                                <div class="contact-cell">
+                                                    <span style="text-transform: lowercase;"><i class="bi bi-envelope"></i> <?= htmlspecialchars($emp['email']) ?></span>
+                                                    <span><i class="bi bi-telephone"></i> <?= htmlspecialchars($emp['phone']) ?></span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="status-pill <?= str_replace(' ', '-', strtolower($emp['status'])) ?>">
+                                                    <?= ucfirst($emp['status']) ?>
+                                                </span>
+                                            </td>
+                                            <td class="table-action">
+                                                <button
+                                                    type="button"
+                                                    class="edit-icon edit-btn"
+                                                    data-id="<?= $emp['id'] ?>"
+                                                    data-first-name="<?= htmlspecialchars($emp['first_name']) ?>"
+                                                    data-middle-name="<?= htmlspecialchars($emp['middle_name']) ?>"
+                                                    data-last-name="<?= htmlspecialchars($emp['last_name']) ?>"
+                                                    data-position="<?= htmlspecialchars($emp['position']) ?>"
+                                                    data-position-type="<?= $emp['position_type'] ?>"
+                                                    data-email="<?= htmlspecialchars($emp['email']) ?>"
+                                                    data-phone="<?= htmlspecialchars($emp['phone']) ?>"
+                                                    data-hire-date="<?= $emp['hire_date'] ?>"
+                                                    data-branch-id="<?= htmlspecialchars($emp['branch_id'] ?? '') ?>"
+                                                    data-status="<?= $emp['status'] ?>"
+                                                    title="Edit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                                <a href="../backend/employee.php?id=<?= $emp['id'] ?>" class="delete-icon delete-confirm" title="Delete"><i class="bi bi-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="6" class="empty-state">No employees found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <?php include '../components/pagination.php'; ?>
 
-                </div>
 
                 <!-- Add Employee Modal -->
                 <div id="addEmployeeModal" class="modal">
